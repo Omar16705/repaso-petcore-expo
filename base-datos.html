@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base de datos · PetCore Repaso</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style_bd.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__marca"><span class="nav__logo">🐾</span> PetCore · Repaso</a>
+    <button class="nav__toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <ul class="nav__links" data-nav-links>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="arquitectura-backend.html">Backend</a></li>
+      <li><a href="arquitectura-frontend.html">Frontend &amp; App</a></li>
+      <li><a href="base-datos.html">Base de datos</a></li>
+      <li><a href="roles-permisos.html">Roles &amp; CRUD</a></li>
+      <li><a href="conceptos-clave.html">Conceptos clave</a></li>
+      <li><a href="preguntas-defensa.html">Preguntas</a></li>
+      <li><a href="guion-presentacion.html">Guion</a></li>
+    </ul>
+    <button class="nav__tema" data-tema-toggle aria-label="Cambiar tema">🌙</button>
+  </div>
+</nav>
+
+<header class="hero-pagina">
+  <div class="contenedor">
+    <span class="hero-pagina__kicker">Base de datos · Oracle Cloud</span>
+    <h1>Modelo de datos de PetCore</h1>
+    <p><strong>48 tablas</strong> en Oracle, gestionadas con <strong>SQL Developer</strong>, siguiendo el estándar <code>SCREAMING_SNAKE_CASE</code>: <code>TBL_&lt;ENTIDAD&gt;</code>, prefijo de columna por tabla, y constraints nombradas <code>PK_ / FK_ / UQ_ / CK_ / IX_</code>. El script se ejecuta de arriba hacia abajo porque ya respeta el orden de dependencias de llaves foráneas.</p>
+  </div>
+</header>
+
+<section class="seccion">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Convenciones</p>
+    <h2 class="titulo-seccion">Estándar de nombres (dilo así si te preguntan por qué)</h2>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Elemento</th><th>Convención</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>Tabla</td><td><code>TBL_&lt;ENTIDAD&gt;</code></td><td><code>TBL_EMPLEADOS</code></td></tr>
+          <tr><td>Columna</td><td><code>&lt;PREFIJO&gt;_&lt;CAMPO&gt;</code></td><td><code>EMP_CORREO</code>, <code>EMP_DUI</code></td></tr>
+          <tr><td>Llave primaria</td><td><code>PK_&lt;CAMPO&gt;</code></td><td><code>PK_EMP_ID</code></td></tr>
+          <tr><td>Llave foránea</td><td><code>FK_&lt;ORIGEN&gt;_&lt;DESTINO&gt;</code></td><td><code>FK_EMP_ROL</code></td></tr>
+          <tr><td>Único</td><td><code>UQ_&lt;CAMPO&gt;</code></td><td><code>UQ_EMP_CORREO</code></td></tr>
+          <tr><td>Check</td><td><code>CK_&lt;CAMPO&gt;</code></td><td><code>CK_EMP_DUI</code> (valida formato <code>00000000-0</code> con <code>REGEXP_LIKE</code>)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota nota--exito" style="margin-top:14px;">Detalle a destacar: casi todas las tablas tienen <code>COMMENT ON TABLE</code> y <code>COMMENT ON COLUMN</code> documentando cada campo directamente en el diccionario de datos de Oracle — eso <em>es</em> parte de la documentación técnica que pide el criterio 1 de la rúbrica.</p>
+  </div>
+</section>
+
+<section class="seccion seccion--alt">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Tabla central</p>
+    <h2 class="titulo-seccion"><code>TBL_EMPLEADOS</code>: la tabla de usuarios del sistema</h2>
+    <p class="sub-seccion">Aquí viven los 4 roles de personal que usan el portal web. Campos clave:</p>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Columna</th><th>Tipo / regla</th><th>Para qué</th></tr></thead>
+        <tbody>
+          <tr><td><code>EMP_CORREO</code></td><td><code>UNIQUE</code> + <code>CHECK</code> regex de email</td><td>Usuario para iniciar sesión y recibir avisos</td></tr>
+          <tr><td><code>EMP_CONTRASENIA</code></td><td><code>VARCHAR2(300)</code></td><td>Hash <strong>Argon2</strong> de la contraseña — nunca texto plano</td></tr>
+          <tr><td><code>EMP_DUI</code></td><td><code>CHAR(10)</code> + <code>CHECK REGEXP_LIKE</code></td><td>Documento de identidad de El Salvador, formato <code>00000000-0</code></td></tr>
+          <tr><td><code>EMP_ROL_ID</code></td><td><code>FK → TBL_ROLES</code></td><td>Define el rol (Administrador/Veterinario/Recepcionista/Farmacéutico)</td></tr>
+          <tr><td><code>EMP_TUR_ID</code></td><td><code>FK → TBL_TURNOS</code> (nullable)</td><td>Turno asignado — permite saber quién debería estar trabajando sin depender de asistencia</td></tr>
+          <tr><td><code>EMP_ESTADO</code></td><td><code>CHECK IN ('Activo','Inactivo','Suspendido')</code></td><td>Baja lógica: nunca se borra el historial de un empleado</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Las 48 tablas</p>
+    <h2 class="titulo-seccion">Organizadas por dominio funcional</h2>
+    <p class="sub-seccion">Así se explican mejor en la defensa que leyendo una lista plana: agrúpalas por lo que hacen.</p>
+
+    <div class="grupo-bd">
+      <h3>👤 Catálogos y personal</h3>
+      <div class="chips-bd">
+        <span class="chip-bd">TBL_ROLES</span><span class="chip-bd">TBL_TURNOS</span><span class="chip-bd">TBL_EMPLEADOS</span><span class="chip-bd">TBL_CFG_SISTEMA</span>
+      </div>
+    </div>
+
+    <div class="grupo-bd">
+      <h3>🐶 Catálogos clínicos y mascotas</h3>
+      <div class="chips-bd">
+        <span class="chip-bd">TBL_ESPECIE</span><span class="chip-bd">TBL_RAZA</span><span class="chip-bd">TBL_PELAJE</span><span class="chip-bd">TBL_PROPIETARIOS</span><span class="chip-bd">TBL_MASCOTAS</span><span class="chip-bd">TBL_ALERGIAS</span><span class="chip-bd">TBL_ALERGIA_MASCOTA</span><span class="chip-bd">TBL_DIAGNOSTICOS</span><span class="chip-bd">TBL_DIAGNOSTICO_RAZA</span><span class="chip-bd">TBL_MASCOTA_ENFERMEDAD</span>
+      </div>
+    </div>
+
+    <div class="grupo-bd">
+      <h3>🩺 Citas y atención clínica (el núcleo del sistema)</h3>
+      <div class="chips-bd">
+        <span class="chip-bd">TBL_SERVICIOS</span><span class="chip-bd">TBL_CITAS</span><span class="chip-bd">TBL_CITA_SERVICIO</span><span class="chip-bd">TBL_EXPEDIENTE</span><span class="chip-bd">TBL_DIAGNOSTICO_EXPEDIENTE</span><span class="chip-bd">TBL_EXPEDIENTE_SERVICIO</span><span class="chip-bd">TBL_PRESCRIPCION</span><span class="chip-bd">TBL_DETALLE_PRESCRIPCION</span><span class="chip-bd">TBL_HOSPITALIZACION</span><span class="chip-bd">TBL_EVOLUCION_CLINICA</span><span class="chip-bd">TBL_TAREAS_MEDICAS</span><span class="chip-bd">TBL_CARTILLAS</span><span class="chip-bd">TBL_ANTIPARASITARIO</span><span class="chip-bd">TBL_HISTORIAL_TRATAMIENTO</span><span class="chip-bd">TBL_CUIDADOS</span><span class="chip-bd">TBL_POSOLOGIA_FARMACO</span>
+      </div>
+    </div>
+
+    <div class="grupo-bd">
+      <h3>💊 Inventario, compras y ventas (farmacia)</h3>
+      <div class="chips-bd">
+        <span class="chip-bd">TBL_PROVEEDOR</span><span class="chip-bd">TBL_TIPO_PRODUCTO</span><span class="chip-bd">TBL_MARCA</span><span class="chip-bd">TBL_PRODUCTO</span><span class="chip-bd">TBL_COMPRAS</span><span class="chip-bd">TBL_DETALLE_COMPRA</span><span class="chip-bd">TBL_SOLICITUDES_BODEGA</span><span class="chip-bd">TBL_DETALLE_SOLICITUD</span><span class="chip-bd">TBL_VENTAS</span><span class="chip-bd">TBL_DETALLE_VENTA</span><span class="chip-bd">TBL_MOVIMIENTO_INVENTARIO</span>
+      </div>
+    </div>
+
+    <div class="grupo-bd">
+      <h3>📣 Comunicación y notificaciones</h3>
+      <div class="chips-bd">
+        <span class="chip-bd">TBL_ANUNCIOS</span><span class="chip-bd">TBL_ANUNCIO_REACCIONES</span><span class="chip-bd">TBL_ANUNCIO_COMENTARIOS</span><span class="chip-bd">TBL_NOTIFICACIONES</span><span class="chip-bd">TBL_NOTIFICACION_DESTINATARIO</span><span class="chip-bd">TBL_SUSCRIPCIONES_PUSH</span><span class="chip-bd">TBL_PUSH_TOKEN_FCM</span>
+      </div>
+    </div>
+
+    <div class="grupo-bd">
+      <h3>🗓️ Recursos humanos</h3>
+      <div class="chips-bd">
+        <span class="chip-bd">TBL_ASISTENCIA_EMPLEADOS</span><span class="chip-bd">TBL_DIAS_FERIADOS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion seccion--alt">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Relaciones clave</p>
+    <h2 class="titulo-seccion">Cómo se conecta todo: el flujo clínico completo</h2>
+    <p class="sub-seccion">Si el jurado pide dibujar el flujo de una visita veterinaria en la pizarra, este es el camino real por las tablas:</p>
+    <div class="flujo-bd">
+      <span class="flujo-paso">PROPIETARIO</span>
+      <span class="flujo-flecha">→</span>
+      <span class="flujo-paso">MASCOTA</span>
+      <span class="flujo-flecha">→</span>
+      <span class="flujo-paso">CITA</span>
+      <span class="flujo-flecha">→</span>
+      <span class="flujo-paso">CITA_SERVICIO</span>
+      <span class="flujo-flecha">→</span>
+      <span class="flujo-paso">EXPEDIENTE</span>
+      <span class="flujo-flecha">→</span>
+      <span class="flujo-paso">DIAGNOSTICO_EXPEDIENTE</span>
+      <span class="flujo-flecha">→</span>
+      <span class="flujo-paso">PRESCRIPCION</span>
+      <span class="flujo-flecha">→</span>
+      <span class="flujo-paso">DETALLE_PRESCRIPCION</span>
+      <span class="flujo-flecha">→</span>
+      <span class="flujo-paso">MOVIMIENTO_INVENTARIO</span>
+    </div>
+    <p style="margin-top:16px; color:var(--texto-suave); font-size:.92rem;">
+      Un <strong>propietario</strong> tiene mascotas → la <strong>mascota</strong> agenda una <strong>cita</strong> (que puede incluir varios <strong>servicios</strong>, de ahí la tabla intermedia <code>CITA_SERVICIO</code>, relación muchos-a-muchos) → el veterinario abre/actualiza el <strong>expediente</strong> de la mascota → registra un <strong>diagnóstico</strong> ligado a ese expediente → si hace falta medicar, crea una <strong>prescripción</strong> con sus <strong>detalles</strong> (fármaco + posología) → al despachar la receta en farmacia se genera un <strong>movimiento de inventario</strong> que descuenta el stock del producto.
+    </p>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor">
+    ⬅ <a href="arquitectura-frontend.html">Frontend &amp; App móvil</a> &nbsp;·&nbsp; Siguiente: <a href="roles-permisos.html">Roles, autenticación y CRUD →</a>
+  </div>
+</footer>
+
+<button class="volver-arriba" data-volver-arriba aria-label="Volver arriba">↑</button>
+
+<script src="js/base.js"></script>
+<script src="js/script_bd.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+/* style_preguntas.css -> estilos exclusivos de preguntas-defensa.html */
+
+.bloque-criterio{ margin-bottom:34px; }
+.titulo-criterio{
+  display:flex; align-items:center; gap:12px;
+  font-size:1.15rem; margin:0 0 14px;
+}
+.num-criterio{
+  flex:none; width:32px; height:32px; border-radius:50%;
+  background:var(--azul-600); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; font-weight:800;
+}
+.boton-aleatorio{ margin-top:18px; }
+
+/* ---------- Barra de filtro por dificultad ---------- */
+.barra-filtro{
+  position:sticky; top:var(--nav-h); z-index:90;
+  background:var(--surface); border-bottom:1px solid var(--borde);
+  box-shadow:var(--sombra-sm);
+}
+.barra-filtro__inner{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:12px 20px;
+}
+.barra-filtro__etiqueta{ font-size:.82rem; font-weight:700; color:var(--texto-suave); white-space:nowrap; }
+.barra-filtro__botones{ display:flex; gap:8px; flex-wrap:wrap; }
+
+.chip-filtro{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:.82rem; font-weight:700;
+  padding:7px 14px; border-radius:999px;
+  border:1px solid var(--borde); background:var(--surface-2);
+  color:var(--texto-suave); cursor:pointer;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.chip-filtro:hover{ border-color:var(--azul-400); }
+.chip-filtro.activo{ background:var(--azul-600); border-color:var(--azul-600); color:#fff; }
+.chip-filtro.chip-facil.activo{ background:var(--verde-500); border-color:var(--verde-500); }
+.chip-filtro.chip-intermedia.activo{ background:var(--ambar-500); border-color:var(--ambar-500); }
+.chip-filtro.chip-dificil.activo{ background:var(--rojo-500); border-color:var(--rojo-500); }
+.chip-filtro__contador{
+  font-size:.74rem; font-weight:800; opacity:.85;
+  background:rgba(0,0,0,.12); padding:1px 7px; border-radius:999px;
+}
+.chip-filtro.activo .chip-filtro__contador{ background:rgba(255,255,255,.25); }
+
+/* ---------- Badge de dificultad dentro de cada pregunta ---------- */
+.badge-dificultad{
+  flex:none; font-size:.68rem; font-weight:800; letter-spacing:.02em;
+  padding:3px 9px; border-radius:999px; text-transform:uppercase;
+}
+.badge-facil{ background:#e2f3ea; color:#116a44; }
+.badge-intermedia{ background:#fdf0d8; color:#8a5c08; }
+.badge-dificil{ background:#fbe3e3; color:#a32d2d; }
+:root[data-theme="dark"] .badge-facil{ background:#0f2f22; color:#7fe0b4; }
+:root[data-theme="dark"] .badge-intermedia{ background:#3a2510; color:#ffcf86; }
+:root[data-theme="dark"] .badge-dificil{ background:#3a1414; color:#ff9d9d; }
+
+.acordeon__item[hidden]{ display:none; }
+.contador-vacio{ text-align:center; color:var(--texto-tenue); padding:30px 0; font-size:.9rem; }

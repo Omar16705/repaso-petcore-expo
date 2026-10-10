@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conceptos Clave · PetCore Repaso</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style_conceptos.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__marca"><span class="nav__logo">🐾</span> PetCore · Repaso</a>
+    <button class="nav__toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <ul class="nav__links" data-nav-links>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="arquitectura-backend.html">Backend</a></li>
+      <li><a href="arquitectura-frontend.html">Frontend &amp; App</a></li>
+      <li><a href="base-datos.html">Base de datos</a></li>
+      <li><a href="roles-permisos.html">Roles &amp; CRUD</a></li>
+      <li><a href="conceptos-clave.html">Conceptos clave</a></li>
+      <li><a href="preguntas-defensa.html">Preguntas</a></li>
+      <li><a href="guion-presentacion.html">Guion</a></li>
+    </ul>
+    <button class="nav__tema" data-tema-toggle aria-label="Cambiar tema">🌙</button>
+  </div>
+</nav>
+
+<header class="hero-pagina">
+  <div class="contenedor">
+    <span class="hero-pagina__kicker">Lo que más preguntan en la defensa interna</span>
+    <h1>Conceptos clave, explicados con tu propio código</h1>
+    <p>Estas son las preguntas de teoría que ya te hicieron en la defensa interna (CORS, WebSockets, localStorage...). Cada respuesta está conectada directamente con un archivo real de PetCore, para que no suene memorizada.</p>
+  </div>
+</header>
+
+<section class="seccion">
+  <div class="contenedor">
+    <input type="text" id="buscador-conceptos" class="buscador" placeholder="🔍 Buscar un concepto (ej: CORS, cookie, websocket...)">
+
+    <div class="acordeon" id="acordeon-conceptos">
+
+      <div class="acordeon__item" data-termino="cors origen cross origin">
+        <button class="acordeon__pregunta"><span>¿Qué es CORS y cómo está configurado en tu API?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><strong>CORS (Cross-Origin Resource Sharing)</strong> es el mecanismo del navegador que decide si un sitio web (origen A) puede hacer peticiones a una API que vive en otro dominio (origen B). Por defecto el navegador <strong>bloquea</strong> esas peticiones "cruzadas" por seguridad, a menos que el servidor diga explícitamente que las permite.</p>
+          <p>En PetCore, el navegador carga el frontend desde <code>vercel.app</code> y ese frontend llama a la API en <code>herokuapp.com</code> — son dominios distintos, así que sin CORS el navegador bloquearía todas las peticiones.</p>
+          <p>La configuración vive en <span class="archivo-ref">security/cors/CorsConfig.java</span>: define una lista blanca de orígenes permitidos (Vercel, Heroku, localhost de desarrollo, <code>capacitor://localhost</code> para la app móvil), los métodos HTTP permitidos (GET, POST, PUT, PATCH, DELETE, OPTIONS) y <code>allowCredentials=true</code>, que es obligatorio porque la sesión viaja en una cookie.</p>
+          <p class="nota" style="margin-top:10px;">Frase para la defensa: <em>"CORS no es una medida de seguridad contra atacantes — es una política del navegador para que un sitio no use, sin permiso, las credenciales de otro. La seguridad real de quién puede hacer qué la decide Spring Security en el backend, no CORS."</em></p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="websocket tiempo real notificaciones">
+        <button class="acordeon__pregunta"><span>¿Qué son los WebSockets y para qué los usas?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>HTTP normal es "pregunta-respuesta": el cliente pide, el servidor responde, y la conexión se cierra. Un <strong>WebSocket</strong> abre un canal <em>bidireccional y persistente</em> entre navegador y servidor — ambos pueden enviar mensajes en cualquier momento sin que el cliente tenga que estar preguntando ("polling") cada cierto tiempo.</p>
+          <p>PetCore implementa WebSocket <strong>puro</strong> (sin STOMP, sin un broker de mensajes) en <span class="archivo-ref">config/websocket/WebSocketConfig.java</span> + <span class="archivo-ref">EventoWebSocketHandler.java</span>, con un único endpoint <code>/ws</code>. El servidor hace <em>broadcast</em>: cuando pasa algo relevante (nueva cita, nueva notificación), envía un evento JSON <code>{evento, datos}</code> a todas las sesiones conectadas, y el frontend (<code>websocket_service.js</code>) decide a cuáles le interesa reaccionar.</p>
+          <p>Se usa para: la <strong>campanita de notificaciones</strong> en tiempo real, el <strong>indicador de conectado/desconectado</strong> en el navbar, y actualizar citas/asistencias sin que el usuario tenga que recargar la página.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="localstorage sessionstorage cookie almacenamiento">
+        <button class="acordeon__pregunta"><span>¿Qué guardas en localStorage? ¿Por qué no el token?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><code>localStorage</code> es un almacenamiento del navegador, por dominio, que persiste aunque se cierre la pestaña — y es <strong>accesible desde cualquier JavaScript que corra en esa página</strong>, incluido código malicioso inyectado por un ataque XSS.</p>
+          <p>Por eso PetCore <strong>no guarda el token de sesión en localStorage</strong>. Lo guarda el servidor en una <strong>cookie <code>httpOnly</code></strong> (<code>authToken</code>), que JavaScript <em>no puede leer ni robar</em> aunque exista una vulnerabilidad XSS — solo viaja automáticamente con cada petición al dominio de la API.</p>
+          <p>Lo único que sí usa <code>localStorage</code> en PetCore son <strong>preferencias de interfaz sin información sensible</strong>: tema claro/oscuro, animaciones, formato de hora, opacidad de fondo. Si lo robaran, lo peor que pasa es que alguien sepa si prefieres el modo oscuro.</p>
+          <p class="nota nota--exito" style="margin-top:10px;">Esta es una de las mejores respuestas que puedes dar en la defensa: demuestra que el equipo entendió el riesgo de XSS y migró a un patrón más seguro a propósito.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="jwt json web token cookie httponly sesion">
+        <button class="acordeon__pregunta"><span>¿Cómo funciona tu JWT? ¿Por qué en cookie y no en header?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Un <strong>JWT</strong> (JSON Web Token) es un texto firmado digitalmente con 3 partes (header.payload.signature) que contiene información del usuario (en PetCore: id, correo, rol, tipo de cuenta) y una firma que garantiza que nadie lo alteró sin conocer la clave secreta del servidor.</p>
+          <p>El patrón típico en tutoriales es mandar el JWT en el header <code>Authorization: Bearer ...</code> y guardarlo en <code>localStorage</code>. PetCore usa un patrón más seguro: el servidor <strong>genera el JWT y lo entrega dentro de una cookie <code>httpOnly</code></strong> (<code>security/jwt/JWTUtils.java</code>, firmado con HMAC-SHA256). Así se combina lo mejor de ambos mundos: el token sigue siendo <em>stateless</em> (el servidor no guarda una tabla de sesiones), pero JavaScript no puede acceder a él.</p>
+          <p>Además, implementa <strong>sesión deslizante</strong>: cada request válido renueva la cookie (15 minutos de vida útil), así que un usuario activo nunca se desconecta solo, pero uno inactivo sí expira.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="csrf cross site request forgery">
+        <button class="acordeon__pregunta"><span>Si usan cookies, ¿cómo evitan CSRF?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><strong>CSRF (Cross-Site Request Forgery)</strong> es un ataque donde un sitio malicioso hace que el navegador de la víctima envíe, sin que se dé cuenta, una petición a otra app donde sí tiene sesión activa (aprovechando que las cookies se mandan automáticamente).</p>
+          <p>PetCore mitiga esto con varias capas: la cookie <code>authToken</code> se configura con <code>SameSite</code> (restringe cuándo el navegador la envía en peticiones de origen cruzado) y <code>Secure</code> (solo viaja por HTTPS). Además, CORS ya limita qué orígenes pueden siquiera recibir respuesta de la API, y al ser una API JSON pura (no formularios tradicionales que un atacante pueda replicar fácilmente), la superficie de ataque de CSRF clásico se reduce bastante. Por eso el equipo decidió deshabilitar la protección CSRF integrada de Spring Security (pensada para apps con sesiones de formulario) y apoyarse en <code>SameSite</code> + CORS + JWT.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="boton atras bfcache pageshow historial">
+        <button class="acordeon__pregunta"><span>¿Cómo bloquean el botón "Atrás" después de cerrar sesión?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Cuando navegas "Atrás", muchos navegadores no vuelven a cargar la página desde cero: la restauran desde una caché especial llamada <strong>bfcache</strong> (back-forward cache), con el DOM tal como estaba. Si no se maneja, un usuario podría cerrar sesión, pulsar "Atrás" y ver el dashboard anterior todavía dibujado en pantalla.</p>
+          <p>PetCore soluciona esto escuchando el evento <code>pageshow</code> en cada página protegida:</p>
+          <pre><code>window.addEventListener("pageshow", (e) => {
+  if (e.persisted) location.reload();
+});</code></pre>
+          <p>La propiedad <code>event.persisted</code> es <code>true</code> solo cuando la página viene del bfcache. Al forzar un <code>reload()</code>, se vuelve a ejecutar el guard de sesión (<code>verificarSesionSync()</code>), que detecta que ya no hay cookie válida y redirige al login.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="deny by default autorizacion seguridad endpoints">
+        <button class="acordeon__pregunta"><span>¿Cómo protegen tantos endpoints sin equivocarse?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>PetCore sigue un patrón de seguridad llamado <strong>"deny by default"</strong> (denegar por defecto): en <code>SecurityConfig.java</code>, cada endpoint tiene que tener una regla explícita de quién puede usarlo, y la <em>última línea de toda la configuración</em> es:</p>
+          <pre><code>auth.anyRequest().denyAll();</code></pre>
+          <p>Esto significa que si alguien crea un endpoint nuevo y <strong>se olvida</strong> de agregar su regla de autorización, ese endpoint queda bloqueado automáticamente en vez de quedar abierto por accidente. Es la opción contraria (y más segura) a tener una lista negra de rutas prohibidas, donde olvidarse de una ruta significa dejarla expuesta.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="google oauth login social">
+        <button class="acordeon__pregunta"><span>¿Cómo funciona el login con Google?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Es para los <strong>propietarios de mascotas</strong> en la app móvil (no para el personal). El flujo: el plugin <code>SocialLogin</code> de Capacitor abre el selector de cuentas de Google en el dispositivo, Google devuelve un <strong>ID Token</strong> firmado por Google, y ese token se manda al backend.</p>
+          <p>En el servidor, <span class="archivo-ref">auth/google/GoogleTokenVerifier.java</span> usa la librería oficial <code>google-api-client</code> para <strong>verificar la firma del token directamente con los servidores de Google</strong> (nunca se confía ciegamente en lo que manda el cliente). Si es válido, PetCore crea o vincula el <code>PropietariosEntity</code> usando el <code>pro_google_id</code>, y emite su propia cookie <code>authTokenPropietario</code> igual que en un login normal.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="service worker push notification pwa">
+        <button class="acordeon__pregunta"><span>¿Es PetCore una PWA? ¿Qué hace el Service Worker?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Parcialmente. <code>sw.js</code> no implementa cacheo de assets estáticos (no es "offline-first" como una PWA completa) — su única función es recibir y mostrar <strong>notificaciones push del navegador</strong>: escucha el evento <code>push</code>, parsea el payload JSON que manda el backend (firmado con claves VAPID vía la librería <code>web-push</code>) y llama a <code>showNotification</code>.</p>
+          <p>Esto es distinto del <strong>push nativo de la app móvil</strong>, que usa Firebase Cloud Messaging (dependencia <code>firebase-admin</code> en el backend) — son dos canales de entrega separados para dos plataformas distintas, pero conceptualmente cumplen el mismo propósito: avisar al usuario aunque no tenga la pestaña/app abierta.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="validacion bean validation dto backend frontend">
+        <button class="acordeon__pregunta"><span>¿Dónde se valida realmente un dato: frontend o backend?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><strong>En ambos, con propósitos distintos.</strong> El frontend valida (HTML5 <code>required</code>/<code>type</code>/<code>pattern</code> + JavaScript) para dar <strong>feedback inmediato</strong> al usuario sin esperar un viaje al servidor — pero esa validación se puede saltar fácilmente (herramientas de desarrollador, Postman, un script).</p>
+          <p>Por eso la validación que realmente <strong>garantiza la integridad de los datos</strong> ocurre en el backend, con anotaciones de Bean Validation en los DTO (<code>@NotBlank</code>, <code>@Email</code>, <code>@Pattern</code>, <code>@Past</code>) y el <code>GlobalExceptionHandler</code> que convierte cualquier fallo de validación en una respuesta 400 clara. <strong>La regla de oro: nunca confiar en que el dato ya viene validado solo porque pasó por el frontend.</strong></p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="capacitor app movil webview hibrida nativa">
+        <button class="acordeon__pregunta"><span>¿Por qué no hicieron la app móvil "nativa" desde cero?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>PetCore usa <strong>Capacitor</strong>, un framework que toma una app web (el mismo HTML/CSS/JS del frontend, sin frameworks) y la empaqueta dentro de un <strong>WebView nativo</strong>, dándole acceso a APIs del dispositivo (cámara, almacenamiento, notificaciones push nativas) mediante plugins.</p>
+          <p>Ventaja principal: <strong>un solo código fuente para web y móvil</strong> — cualquier corrección o nueva funcionalidad en las páginas HTML/CSS/JS se refleja en ambas plataformas sin duplicar trabajo. Lo que sí es 100% nativo son los <em>plugins</em>: notificaciones push, acceso al sistema de archivos, compartir, status bar — esos sí usan APIs reales de Android/iOS.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="rest api restful arquitectura">
+        <button class="acordeon__pregunta"><span>¿Qué significa que la API sea "RESTful"?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><strong>REST</strong> (Representational State Transfer) es un estilo de arquitectura para APIs que organiza todo alrededor de <strong>recursos</strong> (sustantivos: <code>/api/mascotas</code>, <code>/api/citas</code>) en vez de acciones (verbos), y usa los métodos HTTP para expresar la operación: <code>GET</code> para leer, <code>POST</code> para crear, <code>PUT</code>/<code>PATCH</code> para actualizar, <code>DELETE</code> para eliminar.</p>
+          <p>PetCore sigue este estilo en todos sus ~47 módulos: cada controller expone rutas como <code>/api/mascotas/{id}</code> y el verbo HTTP determina qué hace, en vez de tener rutas como <code>/api/obtenerMascota</code> o <code>/api/borrarMascota</code>. Además es <strong>stateless</strong> (cada petición trae toda la información necesaria, el servidor no recuerda peticiones anteriores), otro principio clave de REST.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="dto entidad entity separacion">
+        <button class="acordeon__pregunta"><span>¿Qué es un DTO y por qué no exponen las entidades JPA directamente?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Un <strong>DTO</strong> (Data Transfer Object) es un objeto simple que define exactamente qué datos viajan entre el frontend y la API — distinto de la <strong>entidad JPA</strong>, que representa la tabla completa de la base de datos con todas sus relaciones.</p>
+          <p>Exponer la entidad directamente sería peligroso y poco práctico: podría filtrar campos sensibles (como el hash de la contraseña, si no se marca con cuidado), arrastrar relaciones completas innecesarias (ej. traer todos los expedientes de una mascota solo por pedir su nombre) y acoplar la estructura de la base de datos directamente a lo que ve el cliente. Por eso cada módulo de PetCore tiene su propio <code>dto/</code> separado de su <code>entity/</code>, con Bean Validation aplicada solo en el DTO.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="orm hibernate n+1 batch fetch">
+        <button class="acordeon__pregunta"><span>¿Qué es un ORM y qué es el problema N+1?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Un <strong>ORM</strong> (Object-Relational Mapping) como <strong>Hibernate</strong> traduce automáticamente entre objetos Java y filas de una tabla SQL, para no tener que escribir SQL a mano para cada operación. El problema <strong>N+1</strong> es un error de rendimiento clásico: si cargas una lista de 50 mascotas y luego, por cada una, Hibernate hace una consulta aparte para traer su propietario, terminas con 1 consulta inicial + 50 consultas adicionales (51 en total) en vez de una sola consulta optimizada.</p>
+          <p>PetCore lo mitiga configurando <code>hibernate.default_batch_fetch_size=50</code> en <code>application.properties</code>, que agrupa esas consultas adicionales en lotes en vez de hacerlas una por una — el comentario del propio archivo menciona explícitamente el caso de <code>CitasEntity.serviciosCita</code> como motivo de este ajuste.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="maven pom dependencias gestor">
+        <button class="acordeon__pregunta"><span>¿Qué es Maven y para qué sirve el pom.xml?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><strong>Maven</strong> es el gestor de dependencias y herramienta de construcción (build) para proyectos Java. El <code>pom.xml</code> ("Project Object Model") declara qué librerías externas necesita el proyecto (Spring Boot, JWT, Oracle driver, etc.) con su versión exacta, y Maven se encarga de descargarlas, resolver conflictos entre ellas, compilar el código y empaquetarlo en el <code>.jar</code> ejecutable que termina corriendo en Heroku.</p>
+          <p>Sin Maven, el equipo tendría que descargar manualmente cada librería y sus dependencias transitivas — con ~16 dependencias directas en PetCore, eso sería inmanejable a mano.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="stateless stateful sesion servidor">
+        <button class="acordeon__pregunta"><span>¿Qué significa "stateless" y por qué es importante aquí?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Un servidor <strong>stateless</strong> no guarda información de una petición para la siguiente — cada request debe traer todo lo que el servidor necesita saber (en PetCore, el JWT dentro de la cookie). Lo opuesto es <strong>stateful</strong>, donde el servidor mantiene una tabla de sesiones activas en memoria o base de datos.</p>
+          <p>Ser stateless es clave para PetCore porque Heroku puede reiniciar el dyno en cualquier momento (y perder toda la memoria) o, en teoría, correr múltiples instancias — un diseño stateful perdería las sesiones activas en cualquiera de esos casos, mientras que el JWT sigue siendo válido sin importar qué instancia del servidor lo reciba, porque la validación depende solo de la firma criptográfica, no de un estado guardado.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="metodos http idempotencia get post put delete">
+        <button class="acordeon__pregunta"><span>¿Qué es la idempotencia y por qué GET y DELETE la necesitan?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Una operación es <strong>idempotente</strong> si hacerla una vez o cien veces produce el mismo resultado final. <code>GET</code> (leer) y <code>DELETE</code> (eliminar) deben ser idempotentes: pedir el mismo recurso dos veces no debería cambiar nada, y eliminar el mismo registro dos veces debería dejar el sistema en el mismo estado que eliminarlo una sola vez (la segunda vez simplemente ya no existe). <code>PUT</code> también es idempotente (reemplaza el recurso completo con los mismos datos), pero <code>POST</code> (crear) <strong>no</strong> lo es — llamarlo dos veces crea dos registros distintos.</p>
+          <p>Por qué importa: el interceptor de reintentos de PetCore (<code>fetch_con_credenciales.js</code>) solo reintenta automáticamente peticiones <code>GET</code>/<code>HEAD</code> ante errores de red — nunca reintenta un <code>POST</code> automáticamente, precisamente para no arriesgarse a crear un registro duplicado si la primera petición sí llegó a procesarse pero la respuesta se perdió en el camino.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="https tls cifrado transito secure">
+        <button class="acordeon__pregunta"><span>¿Qué es HTTPS/TLS y por qué importa para las cookies?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><strong>HTTPS</strong> es HTTP cifrado mediante <strong>TLS</strong> (Transport Layer Security): toda la comunicación entre el navegador y el servidor viaja encriptada, de modo que alguien espiando la red (por ejemplo en un WiFi público) no puede leer ni modificar los datos en tránsito.</p>
+          <p>Es especialmente importante para la cookie <code>authToken</code>: tiene el atributo <strong>Secure</strong>, que le dice al navegador "nunca envíes esta cookie por una conexión HTTP sin cifrar". Vercel y Heroku sirven el sitio y la API por HTTPS por defecto, así que esa condición siempre se cumple en producción — sin TLS, aunque la cookie sea <code>httpOnly</code>, viajaría en texto plano y cualquiera en la misma red podría leerla.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="indice base de datos ix performance consulta">
+        <button class="acordeon__pregunta"><span>¿Qué es un índice de base de datos (IX_)?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Un índice es una estructura auxiliar que la base de datos mantiene para encontrar filas rápidamente sin tener que revisar la tabla completa fila por fila — funciona de forma parecida al índice de un libro: en vez de leer todas las páginas buscando un tema, el índice te dice directamente dónde está.</p>
+          <p>En PetCore, las llaves primarias y únicas (<code>PK_</code>, <code>UQ_</code>) generan índices automáticamente en Oracle, y las convenciones del proyecto reservan el prefijo <code>IX_</code> para índices adicionales creados a propósito en columnas que se consultan muy seguido pero no son llave (por ejemplo, buscar citas por fecha). Sin índices, una tabla con miles de expedientes clínicos se volvería progresivamente más lenta de consultar a medida que crece.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="transaccion acid atomicidad consistencia">
+        <button class="acordeon__pregunta"><span>¿Qué es una transacción y qué significa ACID?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Una <strong>transacción</strong> agrupa varias operaciones de base de datos para que se ejecuten como una sola unidad: o se completan <em>todas</em>, o no se aplica <em>ninguna</em>. Por ejemplo, registrar una venta en farmacia implica insertar en <code>TBL_VENTAS</code>, insertar en <code>TBL_DETALLE_VENTA</code> y descontar stock en <code>TBL_MOVIMIENTO_INVENTARIO</code> — si el descuento de stock fallara a mitad de camino, la transacción completa se revierte (<em>rollback</em>) para no dejar una venta registrada sin su movimiento de inventario correspondiente.</p>
+          <p><strong>ACID</strong> son las cuatro garantías que debe cumplir: <strong>A</strong>tomicidad (todo o nada), <strong>C</strong>onsistencia (nunca deja la base de datos en un estado inválido), <strong>I</strong>solación (transacciones simultáneas no se interfieren entre sí) y <strong>D</strong>urabilidad (una vez confirmada, sobrevive incluso a un apagón). Spring maneja esto con la anotación <code>@Transactional</code> en los services.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="argon2 bcrypt comparacion hashing algoritmo">
+        <button class="acordeon__pregunta"><span>¿Por qué Argon2 y no bcrypt (el más usado en tutoriales)?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Ambos son algoritmos diseñados específicamente para hashear contraseñas (lentos a propósito, con "salt" integrado para que dos contraseñas iguales no den el mismo hash). La diferencia principal es que <strong>Argon2</strong> es más reciente (ganador de la Password Hashing Competition 2015) y está diseñado para ser costoso también en <strong>memoria</strong>, no solo en tiempo de CPU — eso lo hace más resistente a ataques que usan hardware especializado (GPUs, ASICs) para probar millones de contraseñas en paralelo, algo a lo que bcrypt es más vulnerable al depender solo de costo de CPU.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="vapid web push voluntary application">
+        <button class="acordeon__pregunta"><span>¿Qué es VAPID en las notificaciones push?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><strong>VAPID</strong> (Voluntary Application Server Identification) es un estándar que permite que un servidor se identifique ante los servicios push de los navegadores (Chrome, Firefox) sin depender de una cuenta propietaria de cada navegador. PetCore genera un par de claves VAPID (pública/privada): la <strong>pública</strong> se expone en un endpoint abierto (<code>/api/push/vapid-public-key</code>) para que el navegador del usuario se suscriba, y la <strong>privada</strong> la usa el backend (librería <code>web-push</code>, con BouncyCastle para el cifrado ECDH) para firmar cada notificación antes de enviarla — así el navegador puede confirmar que la notificación realmente viene del servidor de PetCore y no de un tercero.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="capacitor react native flutter comparacion framework movil">
+        <button class="acordeon__pregunta"><span>¿Capacitor vs. React Native vs. Flutter: qué diferencia hay?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Los tres resuelven "una app para Android y iOS con un solo código", pero de formas muy distintas: <strong>Flutter</strong> y <strong>React Native</strong> compilan a componentes de interfaz nativos reales (o casi), requieren aprender su propio framework (Dart o React) y reescribir toda la interfaz desde cero. <strong>Capacitor</strong>, en cambio, no reemplaza la interfaz — toma la app web que ya existe (HTML/CSS/JS, tal como la pide esta rúbrica) y la ejecuta dentro de un WebView nativo, exponiendo plugins para acceder a funciones del dispositivo.</p>
+          <p>Para PetCore esto significó poder <strong>reutilizar el 100% del frontend web</strong> para la app móvil sin aprender ni mantener un stack completamente aparte — el costo es que el rendimiento de la interfaz depende del motor WebView del sistema operativo, en vez de ser un componente nativo puro.</p>
+        </div></div>
+      </div>
+
+    </div>
+
+    <p id="sin-resultados" class="nota" style="display:none;margin-top:16px;">No se encontró ningún concepto con ese término. Prueba con otra palabra.</p>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor">
+    ⬅ <a href="roles-permisos.html">Roles &amp; CRUD</a> &nbsp;·&nbsp; Siguiente: <a href="preguntas-defensa.html">Posibles preguntas del jurado →</a>
+  </div>
+</footer>
+
+<button class="volver-arriba" data-volver-arriba aria-label="Volver arriba">↑</button>
+
+<script src="js/base.js"></script>
+<script src="js/script_conceptos.js"></script>
+</body>
+</html>

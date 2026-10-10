@@ -1,0 +1,22 @@
+/* style_bd.css -> estilos exclusivos de base-datos.html */
+
+.grupo-bd{ margin-bottom:26px; }
+.grupo-bd h3{ margin:0 0 10px; font-size:1.02rem; }
+.chips-bd{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip-bd{
+  font-family:var(--fuente-mono); font-size:.78rem;
+  background:var(--surface); border:1px solid var(--borde);
+  color:var(--texto-suave); padding:5px 10px; border-radius:7px;
+}
+
+.flujo-bd{
+  display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+  background:var(--surface); border:1px solid var(--borde);
+  border-radius:var(--radio-md); padding:20px; box-shadow:var(--sombra-sm);
+}
+.flujo-paso{
+  font-weight:700; font-size:.82rem;
+  background:var(--azul-600); color:#fff;
+  padding:8px 14px; border-radius:999px; white-space:nowrap;
+}
+.flujo-flecha{ color:var(--texto-tenue); font-weight:700; }

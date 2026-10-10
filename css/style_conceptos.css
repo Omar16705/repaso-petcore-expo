@@ -1,0 +1,13 @@
+/* style_conceptos.css -> estilos exclusivos de conceptos-clave.html */
+
+.buscador{
+  width:100%; max-width:480px; display:block; margin:0 0 22px;
+  padding:12px 16px; border-radius:999px;
+  border:1px solid var(--borde); background:var(--surface);
+  color:var(--texto); font-size:.95rem;
+}
+.buscador:focus{ outline:2px solid var(--azul-400); outline-offset:1px; }
+
+.acordeon__respuesta p{ margin:0 0 10px; }
+.acordeon__respuesta p:last-child{ margin-bottom:0; }
+.acordeon__item[hidden]{ display:none; }

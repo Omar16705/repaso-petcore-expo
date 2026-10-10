@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arquitectura Frontend &amp; App Móvil · PetCore Repaso</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style_frontend.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__marca"><span class="nav__logo">🐾</span> PetCore · Repaso</a>
+    <button class="nav__toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <ul class="nav__links" data-nav-links>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="arquitectura-backend.html">Backend</a></li>
+      <li><a href="arquitectura-frontend.html">Frontend &amp; App</a></li>
+      <li><a href="base-datos.html">Base de datos</a></li>
+      <li><a href="roles-permisos.html">Roles &amp; CRUD</a></li>
+      <li><a href="conceptos-clave.html">Conceptos clave</a></li>
+      <li><a href="preguntas-defensa.html">Preguntas</a></li>
+      <li><a href="guion-presentacion.html">Guion</a></li>
+    </ul>
+    <button class="nav__tema" data-tema-toggle aria-label="Cambiar tema">🌙</button>
+  </div>
+</nav>
+
+<header class="hero-pagina">
+  <div class="contenedor">
+    <span class="hero-pagina__kicker">Frontend · HTML / CSS / JS puro + App móvil Capacitor</span>
+    <h1>Arquitectura del Frontend y la App Móvil</h1>
+    <p><strong>HTML, CSS, Bootstrap 5.3.8 y JavaScript sin frameworks</strong> (nada de React/Vue/Angular — tal como exige la rúbrica), desplegado en <strong>Vercel</strong>. La app móvil usa <strong>Capacitor</strong> para empaquetar ese mismo frontend dentro de un WebView nativo Android/iOS.</p>
+  </div>
+</header>
+
+<!-- ============ Estructura ============ -->
+<section class="seccion">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Organización</p>
+    <h2 class="titulo-seccion">Patrón Controller / Service, páginas por rol</h2>
+    <p class="sub-seccion">El frontend replica en JavaScript puro una idea parecida al MVC: cada página tiene un <strong>controller</strong> que maneja el DOM/eventos, y delega <em>todo</em> fetch a la API a un <strong>service</strong> dedicado a esa entidad.</p>
+
+    <div class="rejilla rejilla--3">
+      <div class="tarjeta">
+        <h3>📁 js/controllers/</h3>
+        <p>~69 archivos. Un controller por página (ej. <code>citas_admin_controller.js</code>). Maneja eventos de botones, formularios, tablas y pinta los datos en el DOM.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>📁 js/services/</h3>
+        <p>~136 archivos. Un service por entidad (ej. <code>citas_service.js</code>). Son los únicos archivos que hacen <code>fetch</code> a la API — los controllers nunca llaman a <code>fetch</code> directamente.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>📁 js/utils/</h3>
+        <p>Helpers compartidos: alertas (SweetAlert2), formato de fechas, selects/datepickers personalizados, lector de código de barras, generación de PDF.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:26px;">pages/ organizado por rol (espejo del RBAC del backend)</h3>
+    <div class="rejilla rejilla--4">
+      <div class="tarjeta"><span class="rol-chip rol-admin">Administrador</span><p style="margin-top:10px;font-size:.85rem;">20 páginas: personal, inventario (+categorías/marcas/proveedores), compras, citas, servicios, turnos, reportes, configuración...</p></div>
+      <div class="tarjeta"><span class="rol-chip rol-vet">Veterinario</span><p style="margin-top:10px;font-size:.85rem;">16 páginas: expedientes clínicos, citas, cuidados, alergias, hospitalización (ingresos), posología, reportes...</p></div>
+      <div class="tarjeta"><span class="rol-chip rol-recep">Recepcionista</span><p style="margin-top:10px;font-size:.85rem;">9 páginas: citas, sala de espera, registro de mascotas/propietarios, catálogos (especie/raza/pelaje)...</p></div>
+      <div class="tarjeta"><span class="rol-chip rol-farm">Farmacéutico</span><p style="margin-top:10px;font-size:.85rem;">7 páginas: punto de venta (POS), stock, posología, registro de ventas...</p></div>
+    </div>
+    <p class="nota" style="margin-top:14px;">Más <code>pages/Cuentas/</code> (login, recuperar contraseña) y <code>pages/Primer_Inicio/</code> (asistente para configurar el sistema y crear el primer administrador cuando la BD está vacía).</p>
+  </div>
+</section>
+
+<!-- ============ Autenticación frontend ============ -->
+<section class="seccion seccion--alt" id="auth-frontend">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterio 7 de la rúbrica</p>
+    <h2 class="titulo-seccion">Autenticación: sesión por cookie, no por localStorage</h2>
+    <p class="sub-seccion">Dato importante para la defensa: <strong>el proyecto migró de JWT-en-localStorage a cookie httpOnly</strong>. El propio código lo documenta: el comentario en <span class="archivo-ref">login_controller.js</span> dice textualmente <em>"ya no se guarda nada en localStorage/sessionStorage aquí"</em>.</p>
+
+    <div class="timeline">
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <h3>1. Login</h3>
+        <p><code>login_controller.js</code> → <code>AuthModule.iniciarSesion()</code> llama a <code>loginEmpleado()</code> de <code>login_service.js</code>, que hace <code>POST /api/auth/login/empleado</code>.</p>
+      </div>
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <h3>2. El backend responde con una cookie httpOnly</h3>
+        <p>La cookie <code>authToken</code> la pone el <em>servidor</em> en la respuesta. JavaScript del navegador <strong>nunca puede leerla ni manipularla</strong> (eso es justamente lo que significa <code>httpOnly</code>) — solo viaja automáticamente en cada request.</p>
+      </div>
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <h3>3. Cada fetch incluye <code>credentials: "include"</code></h3>
+        <p><code>fetch_con_credenciales.js</code> parchea <code>window.fetch</code> globalmente para que siempre mande las cookies, sin que cada service tenga que acordarse.</p>
+      </div>
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <h3>4. Verificación de sesión</h3>
+        <p><code>sesion_service.js</code> → <code>verificarSesionSync()</code> hace un <strong>XHR síncrono</strong> contra <code>GET /api/auth/me/empleado</code> para bloquear la carga de la página hasta saber si hay sesión válida — algo que un <code>fetch</code> asíncrono no permite hacer antes de que el HTML se pinte.</p>
+      </div>
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <h3>5. Logout</h3>
+        <p><code>logout()</code> hace <code>POST /api/auth/logout</code> (el servidor invalida/borra la cookie); el frontend también limpia <code>sessionStorage</code> y el Cache Storage del navegador.</p>
+      </div>
+    </div>
+
+    <div class="nota nota--exito" style="margin-top:20px;">
+      <strong>¿Entonces qué SÍ hay en localStorage?</strong> Solo preferencias de interfaz sin información sensible: tema claro/oscuro, animaciones activadas, opacidad de fondo, formato de hora 12h/24h, si ya se felicitó el cumpleaños del usuario este año. Cero tokens, cero contraseñas.
+    </div>
+  </div>
+</section>
+
+<!-- ============ Roles y guard ============ -->
+<section class="seccion" id="guard">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterio 8 de la rúbrica</p>
+    <h2 class="titulo-seccion">Protección de rutas, roles y el botón "atrás"</h2>
+
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>Guard de página por rol</h3>
+        <p><span class="archivo-ref">estructura_base_controller.js</span> → función <code>iniciar(config)</code>, llamada al cargar cada página con la lista de roles permitidos:</p>
+        <pre><code>const sesion = SesionService.verificarSesionSync();
+
+if (!sesion) {
+  location.replace('../Cuentas/login.html');
+}
+if (!config.rolesPermitidos.includes(sesion.rol)) {
+  location.replace('../acceso_denegado.html');
+}</code></pre>
+        <p style="font-size:.85rem;color:var(--texto-suave)">El rol <strong>nunca</strong> se decodifica de un JWT en el navegador — siempre se obtiene fresco desde <code>/api/auth/me/empleado</code>, así el backend sigue siendo la única fuente de verdad.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Bloqueo del botón "Atrás" (bfcache)</h3>
+        <p>Tanto el guard de páginas internas como el del asistente de primer uso escuchan el evento <code>pageshow</code>:</p>
+        <pre><code>window.addEventListener("pageshow", (e) => {
+  if (e.persisted) location.reload();
+});</code></pre>
+        <p style="font-size:.85rem;color:var(--texto-suave)">Cuando el navegador restaura una página desde su caché de retroceso (<em>bfcache</em>) tras pulsar "Atrás", esto fuerza una recarga real — que vuelve a ejecutar la verificación de sesión y expulsa al usuario si ya cerró sesión.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px;">Interceptor global de <code>fetch</code></h3>
+    <p><span class="archivo-ref">js/controllers/fetch_con_credenciales.js</span> reemplaza <code>window.fetch</code> una sola vez al cargar el sitio, y agrega automáticamente:</p>
+    <ul class="lista-compacta">
+      <li><code>credentials: "include"</code> en cada llamada (para que la cookie viaje siempre)</li>
+      <li><strong>Reintentos con backoff</strong> (1.5s, 3s, 5s, 8s) en errores 502/503/504 — pensado para el "cold start" de Heroku en el plan gratuito</li>
+      <li><strong>Desenvoltura automática</strong> del <code>ApiResponse {success, message, data}</code> para que los services solo lean <code>.data</code></li>
+      <li><strong>Logout automático</strong> si cualquier llamada (fuera de <code>/api/auth/</code>) responde 401/403 — la sesión expiró</li>
+    </ul>
+    <p class="nota nota--ambar" style="margin-top:14px;">También existe <code>bloqueo_menu_desarrollador.js</code>, que bloquea F12, clic derecho y atajos de DevTools. <strong>Importante aclarar si preguntan:</strong> esto es solo disuasión visual, no seguridad real — la seguridad verdadera está en el backend (Spring Security + validación de cada endpoint).</p>
+  </div>
+</section>
+
+<!-- ============ Llamadas API ============ -->
+<section class="seccion seccion--alt" id="api-calls">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Comunicación con la API</p>
+    <h2 class="titulo-seccion">fetch nativo, validaciones y Service Worker</h2>
+
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>Patrón de llamadas</h3>
+        <ul class="lista-compacta">
+          <li><code>fetch</code> nativo en todos los services (sin axios ni librerías externas)</li>
+          <li>Base URL de Heroku escrita en cada <code>*_service.js</code></li>
+          <li>Errores capturados con <code>try/catch</code> y mostrados con SweetAlert2 (nunca <code>alert()</code> nativo)</li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>Validaciones en el cliente</h3>
+        <ul class="lista-compacta">
+          <li>HTML5 nativo: <code>required</code>, <code>type="email"</code>, <code>type="date"</code>, <code>maxlength</code>, <code>accept="image/*"</code></li>
+          <li>Validación manual en JS: longitud de contraseña, confirmación, verificación de duplicados (correo/DUI/usuario) antes de guardar</li>
+          <li>Componentes personalizados que reemplazan los nativos: selects buscables y date-picker propio</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:22px;">Service Worker (<code>sw.js</code>)</h3>
+    <p>Vive en la raíz del sitio (el <em>scope</em> de un Service Worker es, como máximo, la carpeta donde está el archivo). En PetCore <strong>no cachea assets estáticos</strong> — su único trabajo es soportar <strong>Web Push</strong>: recibe el evento <code>push</code>, muestra la notificación con el logo de PetCore, y abre/enfoca la pestaña correcta en <code>notificationclick</code>.</p>
+  </div>
+</section>
+
+<!-- ============ WebSocket frontend ============ -->
+<section class="seccion" id="ws-frontend">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Tiempo real</p>
+    <h2 class="titulo-seccion">WebSocket en el Frontend</h2>
+    <p class="sub-seccion"><span class="archivo-ref">js/services/websocket_service.js</span> — conexión <strong>nativa</strong> (<code>new WebSocket(...)</code>), sin SockJS ni Stomp.js, hacia <code>wss://petcore-8afada45fabc.herokuapp.com/ws</code>.</p>
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>Robustez de la conexión</h3>
+        <ul class="lista-compacta">
+          <li>Heartbeat manual: ping cada 25s, timeout de pong a los 10s</li>
+          <li>Reconexión automática con backoff exponencial + jitter (1s → 30s)</li>
+          <li>Evento sintético <code>WS_RECONECTADO</code> para que cada página revalide sus datos tras un corte</li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>Para qué se usa</h3>
+        <ul class="lista-compacta">
+          <li>Campanita de notificaciones en tiempo real en la sidebar</li>
+          <li>Indicador visual de "conectado/desconectado" en el navbar</li>
+          <li>Actualización en vivo de citas, asistencias y configuración institucional sin recargar</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ App móvil ============ -->
+<section class="seccion seccion--alt" id="app-movil">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterios 3, 5 y 9 de la rúbrica</p>
+    <h2 class="titulo-seccion">La app móvil: Capacitor, no una app nativa desde cero</h2>
+    <p class="sub-seccion">Carpeta <code>PetCore-APP-Oficial/</code>. <strong>Capacitor</strong> toma el mismo frontend web (HTML/CSS/JS, sin frameworks) y lo empaqueta dentro de un WebView nativo para Android e iOS — confirmado: <code>public/</code> contiene una copia exacta de <code>css/</code>, <code>js/</code>, <code>pages/</code> y <code>sw.js</code> del repositorio Frontend.</p>
+
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>capacitor.config.json</h3>
+        <ul class="lista-compacta">
+          <li><code>appId</code>: <code>com.petcore.app.oficial</code></li>
+          <li><code>webDir</code>: <code>dist</code> (carpeta que genera Vite al compilar)</li>
+          <li>Plugin <code>CapacitorCookies</code> habilitado — <strong>imprescindible</strong> para que la cookie httpOnly de sesión funcione también dentro del WebView nativo</li>
+          <li>Plugin <code>CapacitorHttp</code> habilitado — las peticiones pasan por el puente nativo en vez del WebView directo</li>
+          <li><code>SocialLogin</code> (Google habilitado) para el login con Google desde la app</li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>Dependencias (package.json)</h3>
+        <ul class="lista-compacta">
+          <li>Proyecto <strong>Vite</strong> (<code>npm run dev / build / preview</code>)</li>
+          <li><code>@capacitor/core</code>, <code>@capacitor/android</code>, <code>@capacitor/ios</code>, <code>@capacitor/cli</code></li>
+          <li>Plugins nativos: <code>@capacitor/push-notifications</code>, <code>@capacitor/filesystem</code>, <code>@capacitor/share</code>, <code>@capacitor/status-bar</code>, <code>@capacitor/app</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:22px;">Cómo se compila para Android (flujo a explicar en la demo)</h3>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Paso</th><th>Comando</th><th>Qué hace</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>npm run build</code></td><td>Vite compila el frontend web a la carpeta <code>dist/</code></td></tr>
+          <tr><td>2</td><td><code>npx cap sync android</code></td><td>Copia <code>dist/</code> dentro del proyecto Android y sincroniza plugins nativos</td></tr>
+          <tr><td>3</td><td>Android Studio / <code>gradlew</code></td><td>Compila el APK/AAB con Gradle (<code>minSdkVersion 24</code>, <code>targetSdk 36</code>)</td></tr>
+          <tr><td>4</td><td>Instalación en dispositivo físico</td><td>Lo que pide la rúbrica: "la app móvil se presenta instalada en un dispositivo físico con sistema operativo Android"</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CSS ============ -->
+<section class="seccion" id="css-frontend">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterios 2 y 3 de la rúbrica</p>
+    <h2 class="titulo-seccion">Organización del CSS y diseño responsive</h2>
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>Variables CSS + tema claro/oscuro</h3>
+        <p><code>css/style_global_compartido.css</code> define variables bajo <code>:root[data-theme="dark"]</code>. El tema se alterna cambiando un atributo en <code>&lt;html&gt;</code>, no una clase, y cada página carga dinámicamente su <code>style_X.css</code> o <code>style_X_oscuro.css</code> correspondiente.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Responsive real</h3>
+        <ul class="lista-compacta">
+          <li>Media queries explícitas (ej. <code>@media (max-width: 767.98px)</code>)</li>
+          <li><code>@media (prefers-reduced-motion: reduce)</code> por accesibilidad</li>
+          <li>Detección de dispositivo móvil combinando <code>navigator.userAgent</code> + <code>window.innerWidth</code> para decidir sidebar fija vs. menú hamburguesa</li>
+        </ul>
+      </div>
+    </div>
+    <p class="nota" style="margin-top:16px;">Librerías visuales: <strong>Bootstrap 5.3.8</strong> (grid, utilidades flex, offcanvas) vía CDN, <strong>Animate.css</strong> para transiciones y <strong>SweetAlert2</strong> para todas las alertas/confirmaciones del sistema.</p>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor">
+    ⬅ <a href="arquitectura-backend.html">Arquitectura Backend</a> &nbsp;·&nbsp; Siguiente: <a href="base-datos.html">Base de datos →</a>
+  </div>
+</footer>
+
+<button class="volver-arriba" data-volver-arriba aria-label="Volver arriba">↑</button>
+
+<script src="js/base.js"></script>
+<script src="js/script_frontend.js"></script>
+</body>
+</html>

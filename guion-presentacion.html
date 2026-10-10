@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guion de Presentación · PetCore Repaso</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style_guion.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__marca"><span class="nav__logo">🐾</span> PetCore · Repaso</a>
+    <button class="nav__toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <ul class="nav__links" data-nav-links>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="arquitectura-backend.html">Backend</a></li>
+      <li><a href="arquitectura-frontend.html">Frontend &amp; App</a></li>
+      <li><a href="base-datos.html">Base de datos</a></li>
+      <li><a href="roles-permisos.html">Roles &amp; CRUD</a></li>
+      <li><a href="conceptos-clave.html">Conceptos clave</a></li>
+      <li><a href="preguntas-defensa.html">Preguntas</a></li>
+      <li><a href="guion-presentacion.html">Guion</a></li>
+    </ul>
+    <button class="nav__tema" data-tema-toggle aria-label="Cambiar tema">🌙</button>
+  </div>
+</nav>
+
+<header class="hero-pagina">
+  <div class="contenedor">
+    <span class="hero-pagina__kicker">Para presentar al jurado y al público</span>
+    <h1>Guiones de presentación de PetCore</h1>
+    <p>Dos guiones distintos, porque la audiencia y el contexto son distintos: uno <strong>técnico y completo</strong> para la evaluación formal del jurado externo (sin límite de tiempo), y otro <strong>corto y accesible</strong> para explicar el proyecto al público general que pase por el stand durante los 4 días de ExpoTécnica.</p>
+  </div>
+</header>
+
+<!-- ============ Logística del equipo ============ -->
+<section class="seccion" id="logistica">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Antes de los guiones</p>
+    <h2 class="titulo-seccion">Logística del equipo: 6 integrantes, 4 días, 2 personas por turno</h2>
+    <p class="sub-seccion">ExpoTécnica dura 4 días con turno matutino y vespertino cada día (8 turnos en total), pero solo <strong>2 integrantes</strong> del equipo están presentes en cada turno. Esto cambia la estrategia: <strong>cualquier pareja de los 6 debe poder ejecutar ambos guiones completos</strong>, no solo su parte — nadie puede "especializarse" en una sola sección y desentenderse del resto.</p>
+
+    <div class="rejilla rejilla--3" style="margin-bottom:24px;">
+      <div class="tarjeta">
+        <h3>👥 6 integrantes</h3>
+        <p style="color:var(--texto-suave);font-size:.9rem;margin:0;">Todos deben dominar el sistema completo: web, API, base de datos, app móvil y teoría — no solo su módulo asignado durante el desarrollo.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>📅 4 días × 2 turnos</h3>
+        <p style="color:var(--texto-suave);font-size:.9rem;margin:0;">8 turnos totales (matutino/vespertino). Cada turno lo cubren 2 personas, así que en 4 días cada integrante probablemente repite turno más de una vez.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>🔁 Parejas rotativas</h3>
+        <p style="color:var(--texto-suave);font-size:.9rem;margin:0;">La pareja que esté presente cuando llegue el jurado externo puede ser cualquier combinación de los 6 — por eso ambos guiones están escritos para 2 presentadores genéricos, no 4 roles fijos.</p>
+      </div>
+    </div>
+
+    <h3>Calendario de turnos (complétenlo como equipo)</h3>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Día</th><th>Turno matutino — 2 integrantes</th><th>Turno vespertino — 2 integrantes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Día 1</strong></td><td>_________________ · _________________</td><td>_________________ · _________________</td></tr>
+          <tr><td><strong>Día 2</strong></td><td>_________________ · _________________</td><td>_________________ · _________________</td></tr>
+          <tr><td><strong>Día 3</strong></td><td>_________________ · _________________</td><td>_________________ · _________________</td></tr>
+          <tr><td><strong>Día 4</strong></td><td>_________________ · _________________</td><td>_________________ · _________________</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nota nota--ambar" style="margin-top:14px;">Recomendación: armen las parejas de turno mezclando a alguien más fuerte en backend/base de datos con alguien más fuerte en frontend/app móvil, para que cada turno cubra todo el sistema sin puntos ciegos. Y practiquen <strong>los 6</strong> el guion del jurado completo al menos una vez, sin importar qué parte dominaron durante el desarrollo.</div>
+
+    <h3 style="margin-top:28px;">Ir directo a un guion</h3>
+    <div class="selector-guion">
+      <a href="#guion-jurado" class="tarjeta-guion tarjeta-guion--jurado">
+        <span class="tarjeta-guion__icono">⚖️</span>
+        <div>
+          <h4>Guion para el Jurado Externo</h4>
+          <p>Completo, técnico, sin límite de tiempo. Para la evaluación formal con los 10 criterios de la rúbrica.</p>
+        </div>
+      </a>
+      <a href="#guion-publico" class="tarjeta-guion tarjeta-guion--publico">
+        <span class="tarjeta-guion__icono">📣</span>
+        <div>
+          <h4>Guion para el Público</h4>
+          <p>Corto, en lenguaje sencillo, pensado para repetirse muchas veces durante los 4 días del stand.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ====================  GUION: JURADO EXTERNO  ================ -->
+<!-- ============================================================ -->
+<section class="seccion seccion--alt" id="guion-jurado">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Guion 1 de 2</p>
+    <h2 class="titulo-seccion">⚖️ Guion para el Jurado Externo</h2>
+    <p class="sub-seccion">Pensado para <strong>2 presentadores</strong> (cualquier pareja del equipo, según el turno). No hay límite de tiempo formal — tómense el tiempo necesario para demostrar cada criterio de la rúbrica con calma y seguridad; es preferible ir despacio y claro que apurado y confuso. Los pasos están escritos como "Presentador 1 / Presentador 2" intercambiables: decidan entre ustedes dos, al momento, quién toma cada bloque según de qué se sientan más seguros ese día.</p>
+
+    <div class="temporizador-wrap">
+      <div>
+        <p class="etiqueta-seccion" style="margin-bottom:4px;">Cronómetro de práctica (referencial, no es límite real)</p>
+        <span id="reloj-jurado" class="reloj">00:00</span>
+      </div>
+      <div class="temporizador-botones">
+        <button class="btn btn-primario" data-reloj-iniciar="reloj-jurado">▶ Iniciar</button>
+        <button class="btn btn-fantasma" data-reloj-pausar="reloj-jurado">⏸ Pausar</button>
+        <button class="btn btn-fantasma" data-reloj-reiniciar="reloj-jurado">⟲ Reiniciar</button>
+      </div>
+    </div>
+
+    <div class="timeline guion-timeline">
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>1. Apertura y presentación del equipo</h3><span class="chip-tiempo">~2 min</span></div>
+        <p><strong>Presentador 1:</strong> "Buenos días/tardes, somos parte del equipo PetCore. Hoy les presentamos un sistema integral de gestión veterinaria, desarrollado con Java y Spring Boot en el backend, HTML/CSS/Bootstrap/JavaScript sin frameworks en el frontend, base de datos Oracle, y una app móvil con Capacitor."</p>
+        <p><strong>Presentador 2:</strong> "El sistema cubre todo el flujo de una clínica real: desde que un propietario agenda una cita, pasando por la atención clínica del veterinario, hasta el despacho de medicamentos en farmacia — con cuatro roles de personal: Administrador, Veterinario, Recepcionista y Farmacéutico, más un quinto rol de Propietario para la app móvil."</p>
+        <p class="indicacion">🎯 Aunque solo 2 estén presentando, pueden mencionar: "somos un equipo de 6 integrantes; hoy nos corresponde a nosotros dos presentar, pero todo el equipo domina el sistema completo." Es una forma honesta de anticipar por qué no están los 6.</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>2. Documentación del sistema <span class="chip-criterio">Criterio 1</span></h3><span class="chip-tiempo">~2 min</span></div>
+        <p>Muestren físicamente o en pantalla el manual de usuario (con capturas de pantalla) y la documentación técnica. Señalen el diagrama de casos de uso y expliquen brevemente qué representa: "este diagrama muestra, por cada rol, qué acciones puede realizar en el sistema — es la base de la protección de endpoints que vamos a demostrar más adelante."</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>3. Demo del sistema web (Vercel) <span class="chip-criterio">Criterios 2, 4, 7</span></h3><span class="chip-tiempo">~8 min</span></div>
+        <p>Abrir la URL pública de Vercel en vivo (nunca localhost — remarquen que es la URL pública). Mostrar:</p>
+        <ul class="lista-indicaciones">
+          <li><strong>Login</strong> como Administrador → recorrido del dashboard → un <strong>CRUD completo</strong> (crear, editar, eliminar un registro) en un módulo simple, narrando que cada acción pasa por validación en el frontend y en el backend.</li>
+          <li><strong>Responsive:</strong> si hay forma de reducir la ventana o cambiar de dispositivo en vivo, mostrar cómo la interfaz se reacomoda.</li>
+          <li><strong>Cambio de rol:</strong> cerrar sesión, iniciar como Veterinario (o Recepcionista/Farmacéutico) y mostrar que el dashboard y las opciones disponibles son distintas — "esto no es solo visual, el backend también bloquea estas acciones para otros roles, lo vamos a demostrar en el siguiente punto."</li>
+        </ul>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>4. Protección de endpoints y vistas <span class="chip-criterio">Criterio 8</span></h3><span class="chip-tiempo">~5 min</span></div>
+        <p>Este es uno de los criterios que más piden demostrar explícitamente. Hacer, en vivo:</p>
+        <ol>
+          <li><strong>Endpoint público:</strong> mostrar que la configuración del sistema carga sin sesión (necesario para pintar el login).</li>
+          <li><strong>Endpoint protegido sin sesión:</strong> cerrar sesión e intentar entrar directo por URL a una página interna → redirige al login.</li>
+          <li><strong>Rol equivocado:</strong> logueados con un rol, intentar entrar a una URL de otro rol → pantalla de "acceso denegado".</li>
+          <li><strong>Botón "Atrás":</strong> cerrar sesión y pulsar "Atrás" en el navegador → la página se recarga y vuelve a pedir login, no se queda mostrando el dashboard anterior.</li>
+        </ol>
+        <p class="indicacion">🎯 Narren qué está pasando técnicamente mientras lo hacen: "esto lo logra un filtro de seguridad en el backend que revisa el rol en cada petición, combinado con un listener en el frontend que detecta cuando el navegador restaura una página desde su caché."</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>5. Demo de la API (Heroku) <span class="chip-criterio">Criterio 9</span></h3><span class="chip-tiempo">~5 min</span></div>
+        <p>En una pestaña aparte, con Postman/Insomnia o la consola del navegador: llamar un endpoint público (200 OK) y el mismo tipo de endpoint protegido sin cookie de sesión (401 Unauthorized). Mostrar la URL real de Heroku. Explicar el envoltorio de respuesta estándar <code>{ success, message, data }</code> que usa toda la API.</p>
+        <p class="indicacion">🎯 Mencionar CORS aquí: "esta API solo acepta peticiones de los dominios que configuramos explícitamente — si alguien intenta llamarla desde un sitio no autorizado, el navegador bloquea la respuesta."</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>6. Demo de la base de datos (Oracle Cloud) <span class="chip-criterio">Criterios 1, 6, 9</span></h3><span class="chip-tiempo">~5 min</span></div>
+        <p>Abrir SQL Developer conectado a Oracle Cloud. Mostrar el modelo de tablas (nombres <code>TBL_*</code>), hacer una consulta que refleje el dato recién creado en la demo web, y señalar un ejemplo de <code>CHECK CONSTRAINT</code> (ej. formato de DUI o correo) explicando que es una segunda capa de validación, independiente del backend.</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>7. Demo de la app móvil (Android físico) <span class="chip-criterio">Criterios 3, 5, 9</span></h3><span class="chip-tiempo">~6 min</span></div>
+        <p>Con la app ya instalada en un dispositivo físico: login como propietario (con Google si aplica), mostrar sus mascotas, un CRUD simple desde la app, y una notificación push si es posible demostrarla en vivo.</p>
+        <p class="indicacion">🎯 Mencionar que es el mismo frontend web empaquetado con Capacitor dentro de un WebView nativo — refuerza dominio técnico y explica por qué la interfaz se ve igual que en la web.</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>8. Arquitectura y dominio técnico profundo <span class="chip-criterio">Criterio 10</span></h3><span class="chip-tiempo">Sin límite — el tiempo que el jurado necesite</span></div>
+        <p>Resumen en pizarra o diapositiva: arquitectura modular del backend (controller → service → repository → entity, ~47 módulos), flujo de autenticación (JWT firmado dentro de una cookie httpOnly, no en localStorage), y el patrón de seguridad "deny by default" (todo bloqueado salvo lo explícitamente permitido).</p>
+        <p>A partir de aquí, el jurado normalmente empieza a preguntar libremente. Mantengan la calma, respondan con seguridad, y si no saben algo con certeza, es mejor decir <em>"no estoy 100% seguro de ese detalle específico, pero lo que sí puedo explicar es..."</em> que inventar una respuesta. Repasen a fondo el <a href="preguntas-defensa.html">banco de preguntas</a> (filtren por dificultad: empiecen por las fáciles) y los <a href="conceptos-clave.html">conceptos clave</a> antes del día de la defensa.</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>9. Cierre</h3><span class="chip-tiempo">~1 min</span></div>
+        <p>"Con esto cubrimos el sistema web, la API, la base de datos y la app móvil de PetCore, todos desplegados en producción y funcionando de forma integrada. Quedamos atentos a cualquier otra pregunta." Agradecer al jurado por su tiempo.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- =====================  GUION: PÚBLICO  ====================== -->
+<!-- ============================================================ -->
+<section class="seccion" id="guion-publico">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Guion 2 de 2</p>
+    <h2 class="titulo-seccion">📣 Guion para el Público (resumido)</h2>
+    <p class="sub-seccion">Para los visitantes que pasan por el stand durante los 4 días de ExpoTécnica — no son jurado, no conocen términos técnicos, y probablemente tengan poco tiempo. El objetivo es que entiendan <strong>qué hace</strong> PetCore y les quede una buena impresión, no una clase de arquitectura de software. Pensado para que <strong>1 o 2 personas</strong> lo repitan decenas de veces sin cansarse, en 3 a 5 minutos.</p>
+
+    <div class="temporizador-wrap">
+      <div>
+        <p class="etiqueta-seccion" style="margin-bottom:4px;">Cronómetro de práctica (objetivo: 3–5 min)</p>
+        <span id="reloj-publico" class="reloj">00:00</span>
+      </div>
+      <div class="temporizador-botones">
+        <button class="btn btn-primario" data-reloj-iniciar="reloj-publico">▶ Iniciar</button>
+        <button class="btn btn-fantasma" data-reloj-pausar="reloj-publico">⏸ Pausar</button>
+        <button class="btn btn-fantasma" data-reloj-reiniciar="reloj-publico">⟲ Reiniciar</button>
+      </div>
+    </div>
+
+    <div class="timeline guion-timeline">
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>1. Gancho inicial</h3><span class="chip-tiempo">~20 seg</span></div>
+        <p>"¡Hola! ¿Tienen mascota? Les mostramos en 3 minutos cómo funciona PetCore, un sistema que creamos para que una clínica veterinaria maneje todo digitalmente: citas, historial médico de las mascotas, inventario de medicamentos y ventas — y también hay una app para que el dueño de la mascota vea todo desde su celular."</p>
+        <p class="indicacion">🎯 Lenguaje sencillo, sin siglas técnicas (nada de "CRUD", "JWT", "API" en esta parte). Sonrían, hagan contacto visual, inviten con una pregunta.</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>2. El problema que resuelve</h3><span class="chip-tiempo">~30 seg</span></div>
+        <p>"Muchas clínicas veterinarias todavía llevan el control en papel o en Excel: citas, historiales médicos, inventario de medicamentos. Eso hace lento atender a un cliente y fácil perder información importante, como si una mascota es alérgica a algún medicamento. PetCore centraliza todo eso en un solo sistema."</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>3. Demo rápida en vivo</h3><span class="chip-tiempo">~2 min</span></div>
+        <p>Mostrar solo lo más visual e impactante, sin explicar el código ni la arquitectura:</p>
+        <ul class="lista-indicaciones">
+          <li>Pantalla del sistema web: agendar o mostrar una cita, abrir el expediente de una mascota con foto.</li>
+          <li>Un vistazo rápido a la app móvil en el celular: "así lo ve el dueño de la mascota, puede ver el historial y recibir notificaciones."</li>
+          <li>Si hay tiempo e interés: el punto de venta de farmacia, por lo visual e intuitivo que es.</li>
+        </ul>
+        <p class="indicacion">🎯 Dejen que la persona toque la pantalla o pruebe algo si parece interesada — generar esa interacción deja mejor impresión que solo mirar.</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>4. Lo que lo hace especial (opcional, si hay interés)</h3><span class="chip-tiempo">~30 seg</span></div>
+        <p>"Lo construimos nosotros mismos, desde la página web hasta la aplicación para celular y la base de datos — y está funcionando de verdad en internet ahora mismo, no es solo una maqueta." Si preguntan algo técnico puntual, respondan en simple y, si quieren más detalle, inviten a que hablen con el equipo o esperen al turno del jurado.</p>
+      </div>
+
+      <div class="timeline__paso">
+        <span class="timeline__punto"></span>
+        <div class="paso-cabecera"><h3>5. Cierre y despedida</h3><span class="chip-tiempo">~20 seg</span></div>
+        <p>"Eso es PetCore en resumen. ¡Gracias por pasar! Si tienen alguna pregunta con gusto se la resolvemos." Agradecer siempre, independientemente de cuánto tiempo se haya quedado la persona.</p>
+      </div>
+
+    </div>
+
+    <div class="nota nota--exito" style="margin-top:28px;">
+      <strong>Tip para los 4 días:</strong> este guion es corto a propósito — se va a repetir muchas veces por turno. Si quien lo da se lo sabe de memoria, suena natural y entusiasta en la repetición 20 igual que en la 1. Practíquenlo en voz alta, no solo leyéndolo.
+    </div>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor">
+    ⬅ <a href="preguntas-defensa.html">Posibles preguntas</a> &nbsp;·&nbsp; <a href="index.html">Volver al inicio ↩</a>
+  </div>
+</footer>
+
+<button class="volver-arriba" data-volver-arriba aria-label="Volver arriba">↑</button>
+
+<script src="js/base.js"></script>
+<script src="js/script_guion.js"></script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arquitectura Backend · PetCore Repaso</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style_backend.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__marca"><span class="nav__logo">🐾</span> PetCore · Repaso</a>
+    <button class="nav__toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <ul class="nav__links" data-nav-links>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="arquitectura-backend.html">Backend</a></li>
+      <li><a href="arquitectura-frontend.html">Frontend &amp; App</a></li>
+      <li><a href="base-datos.html">Base de datos</a></li>
+      <li><a href="roles-permisos.html">Roles &amp; CRUD</a></li>
+      <li><a href="conceptos-clave.html">Conceptos clave</a></li>
+      <li><a href="preguntas-defensa.html">Preguntas</a></li>
+      <li><a href="guion-presentacion.html">Guion</a></li>
+    </ul>
+    <button class="nav__tema" data-tema-toggle aria-label="Cambiar tema">🌙</button>
+  </div>
+</nav>
+
+<header class="hero-pagina">
+  <div class="contenedor">
+    <span class="hero-pagina__kicker">Backend · Java + Spring Boot</span>
+    <h1>Arquitectura de la API de PetCore</h1>
+    <p>Monolito modular en <strong>Java 17</strong> con <strong>Spring Boot 4.1</strong>, <strong>JPA/Hibernate</strong> sobre <strong>Oracle</strong>, desplegado en <strong>Heroku</strong>. Paquete raíz <code>PTC_PETCORE.API</code>.</p>
+  </div>
+</header>
+
+<!-- ============ Cómo se creó el proyecto ============ -->
+<section class="seccion">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Origen del proyecto</p>
+    <h2 class="titulo-seccion">¿Cómo se creó en Spring Initializr?</h2>
+    <p class="sub-seccion">El <code>pom.xml</code> hereda de <code>spring-boot-starter-parent</code> (v4.1.0), lo que confirma que el proyecto nació desde <a href="https://start.spring.io" target="_blank" rel="noopener">start.spring.io</a> (Spring Initializr) con Maven como gestor de dependencias y Java 17. Luego el equipo fue agregando dependencias por fases, como lo documentan sus propios comentarios en el pom (<em>"1. OBLIGATORIA"</em>, <em>"3. HABITUALES: agregar solo si estás creando el proyecto desde cero"</em>).</p>
+
+    <div class="tarjeta">
+      <h3>Datos para decir en la defensa</h3>
+      <ul>
+        <li><strong>Group:</strong> <code>PTC_PETCORE</code> · <strong>Artifact:</strong> <code>API</code> · <strong>Packaging:</strong> Jar</li>
+        <li><strong>Java:</strong> 17 (fijado también en <code>system.properties</code> para que Heroku use el JDK correcto)</li>
+        <li><strong>Build tool:</strong> Maven (<code>pom.xml</code>, <code>mvnw</code> / <code>mvnw.cmd</code> como wrapper)</li>
+        <li>Incluye <code>ServletInitializer.java</code> (extiende <code>SpringBootServletInitializer</code>): permite empacar también como WAR, aunque se despliega como Jar ejecutable en Heroku.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Dependencias ============ -->
+<section class="seccion seccion--alt">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">pom.xml</p>
+    <h2 class="titulo-seccion">Dependencias de la API y para qué sirve cada una</h2>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Dependencia</th><th>Para qué se usa en PetCore</th></tr></thead>
+        <tbody>
+          <tr><td><code>spring-boot-starter-data-jpa</code></td><td>JPA/Hibernate: mapea las 48 tablas Oracle a entidades Java y genera los repositorios.</td></tr>
+          <tr><td><code>spring-boot-starter-web</code> / <code>-webmvc</code></td><td>Spring MVC: controllers REST, serialización JSON automática.</td></tr>
+          <tr><td><code>spring-boot-starter-security</code></td><td>Autenticación/autorización: filtra cada request, aplica roles.</td></tr>
+          <tr><td><code>spring-security-crypto</code></td><td>Utilidades criptográficas usadas junto al hashing Argon2 de contraseñas.</td></tr>
+          <tr><td><code>io.jsonwebtoken (jjwt-api / impl / jackson)</code></td><td>Librería JJWT: firma y valida los JWT guardados en la cookie <code>authToken</code>.</td></tr>
+          <tr><td><code>spring-boot-starter-validation</code></td><td>Bean Validation (<code>@NotBlank</code>, <code>@Email</code>, <code>@Pattern</code>…) sobre los DTO de entrada.</td></tr>
+          <tr><td><code>spring-boot-starter-websocket</code></td><td>Soporte WebSocket de bajo nivel para el endpoint <code>/ws</code> (notificaciones en tiempo real).</td></tr>
+          <tr><td><code>spring-boot-starter-mail</code></td><td>Envío de correos: código de recuperación de contraseña.</td></tr>
+          <tr><td><code>google-api-client</code></td><td>Verifica el ID Token de "Iniciar sesión con Google" del lado del servidor.</td></tr>
+          <tr><td><code>cloudinary-http44</code></td><td>Sube y gestiona imágenes (fotos de perfil, mascotas) en la nube.</td></tr>
+          <tr><td><code>bcprov-jdk18on</code> (BouncyCastle)</td><td>Primitivas criptográficas para el cifrado ECDH/VAPID de Web Push.</td></tr>
+          <tr><td><code>web-push</code></td><td>Envía notificaciones push al navegador (Web Push API + VAPID).</td></tr>
+          <tr><td><code>firebase-admin</code></td><td>Envía notificaciones push nativas a la app móvil vía Firebase Cloud Messaging (FCM).</td></tr>
+          <tr><td><code>ojdbc11</code></td><td>Driver JDBC oficial de Oracle: conecta la API con la base de datos en Oracle Cloud.</td></tr>
+          <tr><td><code>lombok</code></td><td>Genera getters/setters/toString por anotación, evita código repetitivo en las entidades.</td></tr>
+          <tr><td><code>dotenv-java</code></td><td>Carga variables de entorno desde un archivo <code>.env</code> en desarrollo local.</td></tr>
+          <tr><td><code>spring-boot-starter-tomcat</code> <em>(provided)</em></td><td>Servidor embebido que ejecuta la API (incluido en el Jar final).</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota" style="margin-top:14px;">Pregunta típica: <strong>"¿Por qué JWT en vez de sesiones de servidor?"</strong> → Porque la API es <em>stateless</em> (no guarda sesiones en memoria/BD), lo cual escala mejor en Heroku, donde el dyno puede reiniciarse o haber varias instancias. Ver detalle en <a href="conceptos-clave.html">Conceptos clave</a>.</p>
+  </div>
+</section>
+
+<!-- ============ Arquitectura por capas ============ -->
+<section class="seccion">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Arquitectura</p>
+    <h2 class="titulo-seccion">Organización modular por feature (no por capa)</h2>
+    <p class="sub-seccion">En vez de tener una carpeta <code>controllers/</code> gigante con todo mezclado, PetCore usa <strong>~47 módulos verticales</strong> (uno por entidad/tabla) bajo <code>modules/</code>, y cada módulo repite siempre la misma estructura interna de 6 carpetas:</p>
+
+    <div class="rejilla rejilla--3">
+      <div class="tarjeta">
+        <h3>📁 controller/</h3>
+        <p>Clases <code>@RestController</code>. Reciben el HTTP request, llaman al service y devuelven <code>ResponseEntity&lt;ApiResponse&lt;T&gt;&gt;</code>.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>📁 service/</h3>
+        <p>Lógica de negocio: reglas, cálculos, orquestación entre repositorios. Nunca usa <code>try/catch</code> — lanza excepciones propias del módulo.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>📁 repository/</h3>
+        <p>Interfaces <code>JpaRepository&lt;Entidad, Long&gt;</code>. Spring Data genera las consultas SQL automáticamente.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>📁 entity/</h3>
+        <p>Clases <code>@Entity</code> mapeadas a las tablas <code>TBL_*</code> de Oracle, con Lombok y relaciones JPA.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>📁 dto/</h3>
+        <p>Objetos de transferencia con las anotaciones de Bean Validation (<code>@NotBlank</code>, <code>@Pattern</code>…) que viajan entre Frontend y API.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>📁 exceptions/</h3>
+        <p>5 excepciones propias por módulo (NotFound, Duplicate, Validation, BusinessRule, DataIntegrity) que heredan de clases globales.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:30px;">Paquetes transversales (compartidos por todos los módulos)</h3>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Paquete</th><th>Responsabilidad</th></tr></thead>
+        <tbody>
+          <tr><td><code>security/config</code></td><td><code>SecurityConfig.java</code> (1219 líneas) — toda la matriz de autorización por rol y endpoint.</td></tr>
+          <tr><td><code>security/cors</code></td><td><code>CorsConfig.java</code> — orígenes, métodos y headers permitidos.</td></tr>
+          <tr><td><code>security/jwt</code></td><td><code>JWTUtils</code>, <code>JwtCookieAuthFilter</code>, <code>AuthenticatedPrincipal</code>, <code>RestAuthHandlers</code>.</td></tr>
+          <tr><td><code>exceptions/global</code></td><td><code>GlobalExceptionHandler</code> (<code>@RestControllerAdvice</code>): traduce cualquier excepción a una respuesta JSON consistente.</td></tr>
+          <tr><td><code>config/websocket</code></td><td><code>WebSocketConfig</code> + <code>EventoWebSocketHandler</code>: endpoint <code>/ws</code> para eventos en tiempo real.</td></tr>
+          <tr><td><code>config/cloudinary</code></td><td><code>CloudinaryConfig</code>: credenciales y cliente de subida de imágenes.</td></tr>
+          <tr><td><code>config/crypto</code></td><td><code>Argon2PasswordConfig</code>: algoritmo de hashing de contraseñas.</td></tr>
+          <tr><td><code>config/paginacion</code></td><td><code>PaginacionUtils</code>: helper para las búsquedas paginadas de los listados.</td></tr>
+          <tr><td><code>config/async</code></td><td><code>DespachadorAsincrono</code>: ejecuta tareas (ej. envío de notificaciones) sin bloquear el hilo HTTP.</td></tr>
+          <tr><td><code>response</code></td><td><code>ApiResponse&lt;T&gt;</code>: envoltorio estándar <code>{ success, message, data }</code> de <em>todas</em> las respuestas de la API.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="nota nota--exito" style="margin-top:16px;">El módulo <code>auth/</code> es especial: no sigue el patrón CRUD. Contiene <code>AuthController</code>, <code>ContraseniaController</code>, <code>RecuperacionController</code>, el verificador de Google (<code>google/</code>) y la recuperación de contraseña por correo (<code>recuperacion/</code>).</p>
+  </div>
+</section>
+
+<!-- ============ CORS ============ -->
+<section class="seccion seccion--alt" id="cors">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterio 9 de la rúbrica</p>
+    <h2 class="titulo-seccion">CORS: ¿quién puede llamar a la API?</h2>
+    <p class="sub-seccion">Definido en <span class="archivo-ref">security/cors/CorsConfig.java</span>, un único bean <code>CorsConfigurationSource</code> registrado para <code>/**</code> — no se usa <code>@CrossOrigin</code> disperso en los controllers.</p>
+
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>Orígenes permitidos</h3>
+        <ul class="lista-compacta">
+          <li>Dominios de desarrollo local: <code>localhost</code>, <code>127.0.0.1</code> (varios puertos de Live Server), <code>localhost:5173</code> (Vite)</li>
+          <li><code>https://*.herokuapp.com</code></li>
+          <li><code>https://petcore-seven.vercel.app</code> y <code>https://petcore-oerh.vercel.app</code> (frontend en Vercel)</li>
+          <li><code>https://localhost</code> y <code>capacitor://localhost</code> (apps nativas Android/iOS)</li>
+          <li>Orígenes extra vía variable de entorno <code>security.cors.extra-origins</code>, sin tener que recompilar</li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>Configuración</h3>
+        <ul class="lista-compacta">
+          <li><strong>allowCredentials = true</strong> → obligatorio porque la sesión viaja en una cookie, no en un header</li>
+          <li><strong>Métodos:</strong> GET, POST, PUT, PATCH, DELETE, OPTIONS</li>
+          <li><strong>Headers permitidos:</strong> Origin, Content-Type, Accept, Authorization, X-Requested-With, Cookie...</li>
+          <li><strong>Headers expuestos:</strong> Set-Cookie, Cookie, Authorization, Content-Disposition</li>
+          <li><strong>maxAge:</strong> 3600s (el navegador cachea el resultado del preflight)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nota nota--alerta" style="margin-top:16px;">
+      <strong>Detalle fino para impresionar al jurado:</strong> <code>WebSocketConfig.java</code> tiene que repetir manualmente esta misma lista de orígenes para el handshake de <code>/ws</code>, porque Spring Security no comparte automáticamente la configuración de CORS HTTP con WebSocket. El propio código lo advierte en un comentario.
+    </div>
+  </div>
+</section>
+
+<!-- ============ Spring Security ============ -->
+<section class="seccion" id="security">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterios 7 y 8 de la rúbrica</p>
+    <h2 class="titulo-seccion">Spring Security: autenticación, roles y "deny by default"</h2>
+    <p class="sub-seccion"><span class="archivo-ref">security/config/SecurityConfig.java</span> — el archivo más importante de toda la API para la defensa (1219 líneas).</p>
+
+    <div class="rejilla rejilla--2" style="margin-bottom:20px;">
+      <div class="tarjeta">
+        <h3>Configuración base de la cadena de filtros</h3>
+        <ul class="lista-compacta">
+          <li><code>CSRF deshabilitado</code> — justificado porque la API es stateless con JWT y no usa formularios HTML tradicionales</li>
+          <li><code>sessionCreationPolicy(STATELESS)</code> — Spring Security no guarda sesión en servidor</li>
+          <li><code>RestAuthHandlers</code> como <code>authenticationEntryPoint</code> y <code>accessDeniedHandler</code> → respuestas 401/403 en JSON consistente, no la página de error por defecto</li>
+          <li><code>JwtCookieAuthFilter</code> insertado antes de <code>UsernamePasswordAuthenticationFilter</code></li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>Roles del sistema (Authorities)</h3>
+        <ul class="lista-compacta">
+          <li><span class="rol-chip rol-admin">ROLE_Administrador</span></li>
+          <li><span class="rol-chip rol-vet">ROLE_Veterinario</span></li>
+          <li><span class="rol-chip rol-recep">ROLE_Recepcionista</span></li>
+          <li><span class="rol-chip rol-farm">ROLE_Farmaceutico</span></li>
+          <li><span class="rol-chip" style="background:var(--surface-2);color:var(--texto-suave);">ROLE_Propietario</span> (usuario de la app móvil, dueño de mascotas)</li>
+        </ul>
+        <p style="font-size:.85rem;color:var(--texto-suave);margin-top:8px;">Constante <code>STAFF = {ADMIN, VET, FARM, RECEP}</code> y helper <code>staffMas(extra...)</code> para endpoints que comparte el personal con el propietario.</p>
+      </div>
+    </div>
+
+    <h3>El patrón clave: "deny by default"</h3>
+    <p>Cada tabla tiene su propio método <code>reglasX(auth)</code> dentro de <code>SecurityConfig</code> con una regla explícita por endpoint (<code>hasAuthority</code>, <code>hasAnyAuthority</code>). Al final de <strong>toda</strong> la cadena hay una única línea que cierra el sistema:</p>
+    <pre><code>auth.anyRequest().denyAll();</code></pre>
+    <p>Esto significa que <strong>cualquier ruta nueva que se agregue sin una regla explícita queda bloqueada automáticamente</strong> — nadie puede "olvidarse" de proteger un endpoint nuevo. Es el punto de seguridad más fuerte para mencionar en la defensa.</p>
+
+    <h3 style="margin-top:26px;">Ejemplos reales de reglas por endpoint</h3>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Método</th><th>Ruta</th><th>Quién puede acceder</th></tr></thead>
+        <tbody>
+          <tr><td><span class="http http-get">GET</span></td><td><code>/api/cfgs_sistema</code></td><td>Público (pinta el login antes de autenticar)</td></tr>
+          <tr><td><span class="http http-post">POST</span></td><td><code>/api/empleados/primer-administrador</code></td><td>Público — solo existe mientras no hay ningún empleado (bootstrap del sistema)</td></tr>
+          <tr><td><span class="http http-get">GET</span></td><td><code>/api/push/vapid-public-key</code></td><td>Público — clave VAPID necesaria antes de iniciar sesión</td></tr>
+          <tr><td><span class="http http-post">POST</span></td><td><code>/api/auth/login/empleado</code></td><td>Público (es el propio login)</td></tr>
+          <tr><td><span class="http http-get">GET</span></td><td><code>/api/alergia_mascota/por_mascota/{id}</code></td><td><span class="rol-chip rol-vet">Veterinario</span> y <span class="rol-chip" style="background:var(--surface-2)">Propietario</span></td></tr>
+          <tr><td><span class="http http-post">POST</span></td><td><code>/api/citas</code></td><td><span class="rol-chip rol-recep">Recepcionista</span> y Propietario (agenda la cita)</td></tr>
+          <tr><td><span class="http http-patch">PATCH</span></td><td><code>/api/citas/{id}/estado</code></td><td><span class="rol-chip rol-vet">Veterinario</span> y <span class="rol-chip rol-recep">Recepcionista</span></td></tr>
+          <tr><td><span class="http http-get">GET</span></td><td><code>/api/empleados/**</code> (gestión de personal)</td><td><span class="rol-chip rol-admin">Administrador</span> únicamente</td></tr>
+          <tr><td>—</td><td><code>/ws/**</code></td><td>Público (handshake abierto; pendiente securizar, ver nota abajo)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota nota--ambar" style="margin-top:14px;">Punto honesto para la defensa si preguntan por debilidades: el <em>handshake</em> de <code>/ws/**</code> está marcado como <code>permitAll()</code> a propósito — el canal WebSocket aún no valida el JWT en la conexión inicial. Es una mejora pendiente, decirlo con seguridad demuestra dominio real (criterio 10).</p>
+  </div>
+</section>
+
+<!-- ============ JWT ============ -->
+<section class="seccion seccion--alt" id="jwt">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Autenticación</p>
+    <h2 class="titulo-seccion">JWT firmado + cookie httpOnly: el corazón de la seguridad</h2>
+    <p class="sub-seccion">PetCore combina lo mejor de dos mundos: un token JWT (sin estado, sin tabla de sesiones en BD) pero <strong>entregado dentro de una cookie <code>httpOnly</code></strong> en vez de guardarlo en <code>localStorage</code>. Ver la comparación completa en <a href="conceptos-clave.html#jwt-cookie">Conceptos clave</a>.</p>
+
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3><span class="archivo-ref">security/jwt/JWTUtils.java</span></h3>
+        <ul class="lista-compacta">
+          <li>Firma con <strong>HMAC-SHA256</strong> (<code>Keys.hmacShaKeyFor</code> + <code>SignatureAlgorithm.HS256</code>)</li>
+          <li>Secreto inyectado por variable de entorno <code>SECRET_KEY_JWT</code> (nunca hardcodeado)</li>
+          <li>Claims del token: <code>id</code>, <code>rol</code>, <code>tipo</code> ("EMPLEADO" o "PROPIETARIO"), <code>sub</code> = correo, <code>iss</code>, <code>exp</code></li>
+          <li>Expiración configurable vía <code>JWT_EXPIRATION</code> (ej. 24h)</li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3><span class="archivo-ref">security/jwt/JwtCookieAuthFilter.java</span></h3>
+        <ul class="lista-compacta">
+          <li>Filtro <code>OncePerRequestFilter</code> que corre en cada request</li>
+          <li>Lee la cookie <code>authToken</code> (empleados) o <code>authTokenPropietario</code> (dueños) — prioriza empleado si llegan ambas</li>
+          <li>Construye el <code>Authentication</code> de Spring con autoridad <code>"ROLE_" + rol</code></li>
+          <li><strong>Sesión deslizante:</strong> si el token es válido, renueva la cookie en cada petición (TTL por defecto 900s = 15 min)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px;">Dos audiencias, dos cookies</h3>
+    <p>El sistema distingue entre <strong>empleados</strong> (Administrador/Veterinario/Recepcionista/Farmacéutico, usan el portal web) y <strong>propietarios</strong> (dueños de mascotas, usan la app móvil). Cada tipo tiene su propio login, su propio endpoint <code>/api/auth/me/...</code> y su propia cookie, firmadas con la misma utilidad <code>JWTUtils</code> pero mantenidas separadas para no mezclar permisos.</p>
+  </div>
+</section>
+
+<!-- ============ Entidades ============ -->
+<section class="seccion" id="entidades">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Modelo de datos</p>
+    <h2 class="titulo-seccion">Entidades JPA y relaciones principales</h2>
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>EmpleadosEntity <span class="archivo-ref">TBL_EMPLEADOS</span></h3>
+        <p>El "hub" del sistema junto a Mascotas. <code>@ManyToOne</code> a <code>RolesEntity</code> (obligatorio) y a <code>TurnosEntity</code> (opcional). Tiene ~17 relaciones <code>@OneToMany</code> inversas: Expedientes, Citas, Ventas, Hospitalización, Prescripciones, Compras, Notificaciones, etc. — casi todo registro queda enlazado al empleado que lo creó o gestionó.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>RolesEntity <span class="archivo-ref">TBL_ROLES</span></h3>
+        <p>Catálogo simple: <code>rol_id</code>, <code>rol_nombre</code>. Los 5 roles (Administrador, Veterinario, Farmacéutico, Recepcionista, Propietario) se combinan con el prefijo <code>ROLE_</code> para formar las <em>authorities</em> de Spring Security.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>PropietariosEntity <span class="archivo-ref">TBL_PROPIETARIOS</span></h3>
+        <p>Usuarios del portal móvil / dueños de mascotas. Incluye <code>pro_google_id</code> para vincular el login con Google. <code>@OneToMany</code> a Mascotas, Ventas y Notificaciones.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>MascotasEntity <span class="archivo-ref">TBL_MASCOTAS</span></h3>
+        <p><code>@ManyToOne</code> obligatorio a Raza, Pelaje y Propietario. <code>@OneToMany</code> a Citas, Cartillas, Expediente, Hospitalización, Tareas Médicas, Antiparasitarios y Alergias.</p>
+      </div>
+    </div>
+    <p class="nota" style="margin-top:16px;">Convención técnica a mencionar: todas las relaciones directas usan <code>fetch = LAZY</code> (no cargan datos relacionados hasta que se piden explícitamente), las claves primarias usan <code>GenerationType.IDENTITY</code> (compatible con Oracle), y <code>hibernate.default_batch_fetch_size=50</code> está configurado en <code>application.properties</code> para evitar el problema N+1 cuando se cargan colecciones completas.</p>
+  </div>
+</section>
+
+<!-- ============ Validaciones y errores ============ -->
+<section class="seccion seccion--alt" id="validaciones">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterio 6 de la rúbrica</p>
+    <h2 class="titulo-seccion">Validaciones e integridad de datos</h2>
+
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>Bean Validation en los DTO</h3>
+        <p>Ejemplo real de <code>EmpleadosDTO</code>:</p>
+        <pre><code>@NotBlank
+@Email
+private String empCorreo;
+
+@Pattern(regexp = "^[0-9]{8}-[0-9]$")
+private String empDui;
+
+@Past
+private LocalDate empFechaNac;
+
+@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+private String empContrasenia;</code></pre>
+        <p style="font-size:.85rem;color:var(--texto-suave)">El campo de contraseña nunca se devuelve en las respuestas JSON gracias a <code>WRITE_ONLY</code> — buen detalle de seguridad para mencionar.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Manejo centralizado de errores</h3>
+        <p><span class="archivo-ref">exceptions/global/GlobalExceptionHandler.java</span> (<code>@RestControllerAdvice</code>) — ningún controller ni service tiene <code>try/catch</code>; todo error sube hasta aquí y se traduce a un código HTTP consistente:</p>
+        <ul class="lista-compacta">
+          <li><code>MethodArgumentNotValidException</code> → <strong>400</strong> con mapa campo→mensaje</li>
+          <li><code>NotFoundException</code> (de cualquier módulo) → <strong>404</strong></li>
+          <li><code>DuplicateException</code> / <code>DataIntegrityViolationException</code> → <strong>409</strong></li>
+          <li><code>BadCredentialException</code> → <strong>401</strong></li>
+          <li><code>CuentaInactivaException</code> → <strong>403</strong></li>
+          <li><code>Exception</code> genérico (no previsto) → <strong>500</strong></li>
+        </ul>
+      </div>
+    </div>
+    <p class="nota nota--exito" style="margin-top:16px;">Cada módulo define sus propias 5 excepciones (ej. <code>CitasNotFoundException</code>) heredando de las clases base globales — así el handler central las atrapa a todas sin tener que registrar 47 handlers distintos.</p>
+  </div>
+</section>
+
+<!-- ============ WebSocket ============ -->
+<section class="seccion" id="websocket">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Tiempo real</p>
+    <h2 class="titulo-seccion">WebSockets en el Backend</h2>
+    <p class="sub-seccion">PetCore usa WebSocket <strong>puro/crudo</strong>, no STOMP — es decir, no usa <code>@EnableWebSocketMessageBroker</code> ni <code>SimpMessagingTemplate</code> (el "WebSocket de alto nivel" típico de los tutoriales). En su lugar implementa su propio protocolo mínimo.</p>
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3><span class="archivo-ref">config/websocket/WebSocketConfig.java</span></h3>
+        <p><code>@EnableWebSocket</code> + <code>WebSocketConfigurer</code>, registra un único endpoint: <code>/ws</code>, atado al handler personalizado.</p>
+      </div>
+      <div class="tarjeta">
+        <h3><span class="archivo-ref">config/websocket/EventoWebSocketHandler.java</span></h3>
+        <p>Extiende <code>TextWebSocketHandler</code>. Mantiene un <code>ConcurrentHashMap</code> con todas las sesiones conectadas y expone <code>difundir(evento, datos)</code>, que serializa <code>{evento, datos}</code> a JSON y lo envía a <strong>todas</strong> las sesiones (broadcast total — el frontend filtra qué eventos le interesan).</p>
+      </div>
+    </div>
+    <h3 style="margin-top:22px;">Detalles de producción (pensados para Heroku)</h3>
+    <ul class="lista-compacta">
+      <li><strong>Ping cada 25s</strong> (<code>@Scheduled</code>) — el router de Heroku corta conexiones inactivas a los 55s, así que el ping evita que el WebSocket se desconecte solo.</li>
+      <li><strong>Pool de hilos dedicado</strong> para los envíos — así un broadcast lento no bloquea el hilo HTTP que disparó el evento.</li>
+      <li><strong>Para qué se usa:</strong> notificaciones en vivo (campanita de la sidebar), indicador de "conectado/desconectado" en el navbar, y actualización en caliente de la configuración institucional sin recargar la página.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ Config y despliegue ============ -->
+<section class="seccion seccion--alt" id="despliegue">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterio 9 de la rúbrica</p>
+    <h2 class="titulo-seccion">Configuración y despliegue en Heroku</h2>
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>application.properties</h3>
+        <p>Todo externalizado a <strong>variables de entorno</strong> (cero credenciales hardcodeadas en el código):</p>
+        <ul class="lista-compacta">
+          <li>BD: <code>DB_URL</code>, <code>DB_USER</code>, <code>DB_PASSWORD</code>, <code>DB_DRIVER</code>, <code>DB_DIALECT</code></li>
+          <li>JWT: <code>SECRET_KEY_JWT</code>, <code>SECURITY_JWT_ISSUER</code>, <code>JWT_EXPIRATION</code></li>
+          <li>Cookies: <code>COOKIE_SECURE</code>, <code>COOKIE_SAMESITE</code>, <code>SESSION_TTL_SEGUNDOS</code></li>
+          <li>Cloudinary, VAPID (Web Push), Firebase, SMTP, Google OAuth</li>
+          <li>Pool HikariCP (máx. 8 conexiones) y Tomcat (máx. 30 hilos) ajustados al plan gratuito de Heroku</li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>Procfile</h3>
+        <pre><code>web: java -Dserver.port=$PORT $JAVA_OPTS -jar target/API-0.0.1-SNAPSHOT.jar</code></pre>
+        <p>Ejecuta el Jar generado por Maven usando el puerto que Heroku asigna dinámicamente (<code>$PORT</code>). <code>system.properties</code> fija <code>java.runtime.version=17</code> para el buildpack.</p>
+        <p style="font-size:.85rem;color:var(--texto-suave)">Dominio real: <code>petcore-8afada45fabc.herokuapp.com</code>. Un workflow de GitHub Actions (<code>keep-alive.yml</code>) hace ping periódico para reducir el "cold start" del dyno gratuito.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor">
+    ⬅ <a href="index.html">Volver al inicio</a> &nbsp;·&nbsp; Siguiente: <a href="arquitectura-frontend.html">Arquitectura Frontend &amp; App móvil →</a>
+  </div>
+</footer>
+
+<button class="volver-arriba" data-volver-arriba aria-label="Volver arriba">↑</button>
+
+<script src="js/base.js"></script>
+<script src="js/script_backend.js"></script>
+</body>
+</html>

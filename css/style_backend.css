@@ -1,0 +1,7 @@
+/* style_backend.css -> estilos exclusivos de arquitectura-backend.html */
+
+.lista-compacta{ margin:0; padding-left:18px; display:flex; flex-direction:column; gap:7px; font-size:.92rem; color:var(--texto-suave); }
+.lista-compacta li::marker{ color:var(--azul-500); }
+.lista-compacta code{ font-size:.82em; }
+
+#cors, #security, #jwt, #entidades, #validaciones, #websocket, #despliegue{ scroll-margin-top: calc(var(--nav-h) + 12px); }

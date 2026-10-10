@@ -1,0 +1,10 @@
+/* style_frontend.css -> estilos exclusivos de arquitectura-frontend.html */
+
+.lista-compacta{ margin:0; padding-left:18px; display:flex; flex-direction:column; gap:7px; font-size:.92rem; color:var(--texto-suave); }
+.lista-compacta li::marker{ color:var(--verde-500); }
+.lista-compacta code{ font-size:.82em; }
+
+#auth-frontend, #guard, #api-calls, #ws-frontend, #app-movil, #css-frontend{ scroll-margin-top: calc(var(--nav-h) + 12px); }
+
+.timeline__paso h3{ margin:0 0 4px; font-size:1rem; }
+.timeline__paso p{ margin:0; color:var(--texto-suave); font-size:.92rem; }

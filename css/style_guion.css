@@ -1,0 +1,50 @@
+/* style_guion.css -> estilos exclusivos de guion-presentacion.html */
+
+.temporizador-wrap{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  background:var(--surface); border:1px solid var(--borde); border-radius:var(--radio-md);
+  padding:18px 22px; margin-bottom:34px; box-shadow:var(--sombra-sm);
+}
+.reloj{ font-family:var(--fuente-mono); font-size:2rem; font-weight:700; color:var(--azul-600); }
+.temporizador-botones{ display:flex; gap:10px; flex-wrap:wrap; }
+.temporizador-botones .btn{ padding:9px 16px; font-size:.85rem; }
+
+.guion-timeline .timeline__paso{ padding-bottom:30px; }
+.paso-cabecera{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:6px; }
+.paso-cabecera h3{ margin:0; font-size:1.05rem; }
+.chip-tiempo{
+  font-family:var(--fuente-mono); font-size:.72rem; font-weight:700;
+  background:var(--surface-2); border:1px solid var(--borde);
+  color:var(--texto-suave); padding:3px 9px; border-radius:999px;
+}
+.chip-criterio{
+  font-size:.68rem; font-weight:800; letter-spacing:.02em;
+  background:var(--azul-600); color:#fff;
+  padding:2px 8px; border-radius:999px; margin-left:6px; vertical-align:middle;
+}
+.guion-timeline p{ margin:0 0 8px; color:var(--texto-suave); }
+.guion-timeline ol{ margin:8px 0 0; padding-left:20px; color:var(--texto-suave); font-size:.92rem; }
+.guion-timeline ol li{ margin-bottom:5px; }
+.indicacion{ font-size:.85rem; font-style:italic; color:var(--azul-600) !important; }
+.lista-indicaciones{ margin:8px 0 0; padding-left:18px; color:var(--texto-suave); font-size:.92rem; }
+.lista-indicaciones li{ margin-bottom:4px; }
+
+.mini{ font-size:.82rem; color:var(--texto-suave); margin:8px 0 0; }
+
+/* ---------- Selector de guion (tarjetas de acceso rápido) ---------- */
+.selector-guion{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+@media (max-width:700px){ .selector-guion{ grid-template-columns:1fr; } }
+.tarjeta-guion{
+  display:flex; align-items:flex-start; gap:14px;
+  background:var(--surface); border:1px solid var(--borde); border-radius:var(--radio-md);
+  padding:20px; text-decoration:none; color:inherit;
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.tarjeta-guion:hover{ text-decoration:none; transform:translateY(-2px); box-shadow:var(--sombra-md); }
+.tarjeta-guion--jurado:hover{ border-color:var(--azul-500); }
+.tarjeta-guion--publico:hover{ border-color:var(--verde-500); }
+.tarjeta-guion__icono{ font-size:1.8rem; flex:none; }
+.tarjeta-guion h4{ margin:0 0 4px; font-size:1.02rem; }
+.tarjeta-guion p{ margin:0; font-size:.86rem; color:var(--texto-suave); }
+
+#guion-jurado, #guion-publico, #logistica{ scroll-margin-top: calc(var(--nav-h) + 12px); }

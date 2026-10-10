@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetCore · Repaso Defensa Externa</title>
+<meta name="description" content="Material de repaso para la defensa externa del sistema PetCore: arquitectura, roles, CRUD, conceptos clave y guion de presentación.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style_index.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__marca"><span class="nav__logo">🐾</span> PetCore · Repaso</a>
+    <button class="nav__toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <ul class="nav__links" data-nav-links>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="arquitectura-backend.html">Backend</a></li>
+      <li><a href="arquitectura-frontend.html">Frontend &amp; App</a></li>
+      <li><a href="base-datos.html">Base de datos</a></li>
+      <li><a href="roles-permisos.html">Roles &amp; CRUD</a></li>
+      <li><a href="conceptos-clave.html">Conceptos clave</a></li>
+      <li><a href="preguntas-defensa.html">Preguntas</a></li>
+      <li><a href="guion-presentacion.html">Guion</a></li>
+    </ul>
+    <button class="nav__tema" data-tema-toggle aria-label="Cambiar tema">🌙</button>
+  </div>
+</nav>
+
+<header class="hero-index">
+  <div class="contenedor hero-index__grid">
+    <div>
+      <span class="hero-pagina__kicker">Instituto Técnico Ricaldone · Desarrollo de Software</span>
+      <h1>Repaso para la Defensa Externa de <span class="resalte">PetCore</span></h1>
+      <p>Sistema de gestión veterinaria: web (HTML, CSS, Bootstrap, JS puro) + API (Java, Spring Boot, JPA/Hibernate) + base de datos Oracle Cloud + app móvil Android/iOS con Capacitor. Esta página reúne la arquitectura real de tu proyecto, los roles y CRUD, los conceptos que más preguntan en la defensa y un guion para presentar.</p>
+      <div class="hero-index__botones">
+        <a href="arquitectura-backend.html" class="btn btn-primario">Empezar por el Backend →</a>
+        <a href="preguntas-defensa.html" class="btn btn-fantasma">Ir directo a las preguntas</a>
+      </div>
+    </div>
+    <div class="tarjeta hero-index__stack">
+      <h3>Stack desplegado</h3>
+      <ul class="lista-stack">
+        <li><strong>Frontend</strong> → Vercel <span class="archivo-ref">petcore-seven.vercel.app</span></li>
+        <li><strong>API / Backend</strong> → Heroku <span class="archivo-ref">petcore-8afada45fabc.herokuapp.com</span></li>
+        <li><strong>Base de datos</strong> → Oracle Cloud (gestionada con SQL Developer)</li>
+        <li><strong>App móvil</strong> → Capacitor (Android / iOS), mismo frontend web empaquetado</li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<section class="seccion">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Rúbrica oficial</p>
+    <h2 class="titulo-seccion">Los 10 criterios que evalúa el jurado</h2>
+    <p class="sub-seccion">Esta es la rúbrica real de la defensa externa. Marca cada criterio cuando tu equipo lo tenga ensayado y a prueba de preguntas — tu progreso se guarda en este navegador.</p>
+
+    <div data-checklist-id="rubrica">
+      <div class="progreso-wrap" style="margin-bottom:18px;">
+        <div class="progreso-barra"><div class="progreso-relleno" data-progreso-barra></div></div>
+        <span class="progreso-texto" data-progreso-texto>0 / 10</span>
+      </div>
+
+      <div class="rejilla" style="gap:12px;">
+        <label class="check-item"><input type="checkbox" data-key="doc"><span><strong>1. Documentación del sistema</strong><br>Manual de usuario con imágenes + documentación técnica (puesta en marcha) + diagramas de funcionamiento.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="ui-web"><span><strong>2. Diseño de interfaces web</strong><br>Responsive en todas las pantallas, interacción clara, diseño estético y profesional.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="ui-movil"><span><strong>3. Diseño de interfaces móviles</strong><br>Lo mismo que el criterio 2, pero en la app Android/iOS.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="crud-web"><span><strong>4. Funcionalidad del sistema web</strong><br>Todos los CRUD funcionan y están validados en Frontend <em>y</em> Backend.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="crud-movil"><span><strong>5. Funcionalidad de la app móvil</strong><br>Mismos CRUD funcionando y validados en la app.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="validaciones"><span><strong>6. Validaciones e integridad de datos</strong><br>Tipos correctos: numéricos, fechas, textos, imágenes — validado por la API.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="auth-roles"><span><strong>7. Autenticación y roles</strong><br>Login + manejo claro de roles en Frontend y Backend, con sus accesos y funciones.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="endpoints"><span><strong>8. Protección de endpoints y vistas</strong><br>Diagrama de casos de uso, endpoints públicos vs. protegidos, bloqueo del botón "atrás" tras cerrar sesión.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="despliegue"><span><strong>9. Despliegue</strong><br>API con CORS configurado, sistema accesible por URL pública, app instalada en un Android físico.</span></label>
+        <label class="check-item"><input type="checkbox" data-key="dominio"><span><strong>10. Dominio teórico y funcional</strong><br>El equipo responde con seguridad, lenguaje técnico correcto, sin dudar.</span></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion seccion--alt">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Navegación</p>
+    <h2 class="titulo-seccion">Secciones del repaso</h2>
+    <div class="rejilla rejilla--3" style="margin-top:10px;">
+
+      <a class="tarjeta tarjeta-link" href="arquitectura-backend.html">
+        <span class="tarjeta-link__icono">⚙️</span>
+        <h3>Arquitectura Backend</h3>
+        <p>Spring Boot 4.1, arquitectura modular por feature, Spring Security "deny-by-default", JWT en cookie httpOnly, CORS, WebSocket, validaciones y manejo global de errores.</p>
+      </a>
+
+      <a class="tarjeta tarjeta-link" href="arquitectura-frontend.html">
+        <span class="tarjeta-link__icono">🖥️</span>
+        <h3>Arquitectura Frontend &amp; App</h3>
+        <p>Patrón Controller/Service en JS puro, sesión por cookie (no localStorage), guard de rutas por rol, WebSocket nativo, Service Worker y la app móvil con Capacitor.</p>
+      </a>
+
+      <a class="tarjeta tarjeta-link" href="base-datos.html">
+        <span class="tarjeta-link__icono">🗄️</span>
+        <h3>Base de datos</h3>
+        <p>48 tablas en Oracle, estándar SCREAMING_SNAKE_CASE, módulos clínicos, de inventario/ventas, RRHH y comunicación. Entidades clave y relaciones.</p>
+      </a>
+
+      <a class="tarjeta tarjeta-link" href="roles-permisos.html">
+        <span class="tarjeta-link__icono">🔐</span>
+        <h3>Roles, autenticación y CRUD</h3>
+        <p>Administrador, Veterinario, Recepcionista, Farmacéutico: qué ve y qué puede hacer cada uno, con ejemplos reales de endpoints protegidos.</p>
+      </a>
+
+      <a class="tarjeta tarjeta-link" href="conceptos-clave.html">
+        <span class="tarjeta-link__icono">💡</span>
+        <h3>Conceptos clave (defensa interna)</h3>
+        <p>CORS, WebSockets, JWT vs. cookie httpOnly, localStorage vs sessionStorage, CSRF, bfcache — explicados con tu propio código.</p>
+      </a>
+
+      <a class="tarjeta tarjeta-link" href="preguntas-defensa.html">
+        <span class="tarjeta-link__icono">❓</span>
+        <h3>Posibles preguntas del jurado</h3>
+        <p>Banco de preguntas organizado por criterio de rúbrica, con respuestas modelo listas para ensayar en equipo.</p>
+      </a>
+
+      <a class="tarjeta tarjeta-link" href="guion-presentacion.html">
+        <span class="tarjeta-link__icono">🎤</span>
+        <h3>Guion de presentación</h3>
+        <p>Estructura minuto a minuto para presentar PetCore al jurado: apertura, demo web, demo móvil, dominio técnico y cierre.</p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor">
+    Material de repaso generado para el equipo de PetCore · Instituto Técnico Ricaldone · No sustituye la documentación oficial del proyecto.
+  </div>
+</footer>
+
+<button class="volver-arriba" data-volver-arriba aria-label="Volver arriba">↑</button>
+
+<script src="js/base.js"></script>
+<script src="js/script_index.js"></script>
+</body>
+</html>

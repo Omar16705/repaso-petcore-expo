@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roles, Autenticación y CRUD · PetCore Repaso</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style_roles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__marca"><span class="nav__logo">🐾</span> PetCore · Repaso</a>
+    <button class="nav__toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <ul class="nav__links" data-nav-links>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="arquitectura-backend.html">Backend</a></li>
+      <li><a href="arquitectura-frontend.html">Frontend &amp; App</a></li>
+      <li><a href="base-datos.html">Base de datos</a></li>
+      <li><a href="roles-permisos.html">Roles &amp; CRUD</a></li>
+      <li><a href="conceptos-clave.html">Conceptos clave</a></li>
+      <li><a href="preguntas-defensa.html">Preguntas</a></li>
+      <li><a href="guion-presentacion.html">Guion</a></li>
+    </ul>
+    <button class="nav__tema" data-tema-toggle aria-label="Cambiar tema">🌙</button>
+  </div>
+</nav>
+
+<header class="hero-pagina">
+  <div class="contenedor">
+    <span class="hero-pagina__kicker">Criterios 4, 5, 7 y 8 de la rúbrica</span>
+    <h1>Roles, autenticación y funcionalidad CRUD</h1>
+    <p>PetCore tiene <strong>4 roles de personal</strong> (uno por módulo del negocio) más un 5º rol para el propietario de mascotas en la app móvil. Cada rol ve una sidebar distinta en el frontend y tiene sus endpoints protegidos uno por uno en el backend.</p>
+  </div>
+</header>
+
+<section class="seccion">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Panorama</p>
+    <h2 class="titulo-seccion">Los 4 roles del personal</h2>
+    <div class="rejilla rejilla--4">
+      <div class="tarjeta tarjeta-rol">
+        <span class="rol-chip rol-admin">Administrador</span>
+        <h3>Control total</h3>
+        <p>Personal, inventario, compras, servicios, turnos, días feriados, asistencias, reportes y configuración del sistema.</p>
+      </div>
+      <div class="tarjeta tarjeta-rol">
+        <span class="rol-chip rol-vet">Veterinario</span>
+        <h3>Atención clínica</h3>
+        <p>Expedientes, citas, diagnósticos, prescripciones, hospitalización, cuidados, alergias y catálogos clínicos (especie/raza/pelaje).</p>
+      </div>
+      <div class="tarjeta tarjeta-rol">
+        <span class="rol-chip rol-recep">Recepcionista</span>
+        <h3>Front desk</h3>
+        <p>Registro de propietarios/mascotas, agenda de citas y sala de espera.</p>
+      </div>
+      <div class="tarjeta tarjeta-rol">
+        <span class="rol-chip rol-farm">Farmacéutico</span>
+        <h3>Farmacia / POS</h3>
+        <p>Punto de venta, stock de productos, posología y registro de ventas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="seccion seccion--alt" id="matriz">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterios 4, 5 y 7</p>
+    <h2 class="titulo-seccion">Matriz de funcionalidad CRUD por rol</h2>
+    <p class="sub-seccion">Resumen de qué puede Crear / Leer / Actualizar / Eliminar cada rol en los módulos principales. Úsala para practicar: el jurado puede pedir "demuestre que el recepcionista no puede entrar a Personal".</p>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr><th>Módulo</th><th class="col-admin">Admin</th><th class="col-vet">Veterinario</th><th class="col-recep">Recepcionista</th><th class="col-farm">Farmacéutico</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Personal (empleados)</td><td class="si">CRUD</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td>Inventario / productos</td><td class="si">CRUD</td><td class="parcial">Leer</td><td class="no">—</td><td class="parcial">Leer / Stock</td></tr>
+          <tr><td>Compras a proveedor</td><td class="si">CRUD</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td>Servicios y turnos</td><td class="si">CRUD</td><td class="parcial">Leer</td><td class="parcial">Leer</td><td class="no">—</td></tr>
+          <tr><td>Propietarios y mascotas</td><td class="parcial">Leer</td><td class="parcial">Leer</td><td class="si">CRUD</td><td class="no">—</td></tr>
+          <tr><td>Citas</td><td class="parcial">Gestionar</td><td class="parcial">Atender / estado</td><td class="si">Crear / agendar</td><td class="no">—</td></tr>
+          <tr><td>Expedientes clínicos</td><td class="no">—</td><td class="si">CRUD</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td>Diagnósticos y prescripciones</td><td class="no">—</td><td class="si">CRUD</td><td class="no">—</td><td class="parcial">Leer (para despachar)</td></tr>
+          <tr><td>Hospitalización</td><td class="no">—</td><td class="si">CRUD</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td>Punto de venta (POS)</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="si">CRUD</td></tr>
+          <tr><td>Reportes</td><td class="si">Generales</td><td class="parcial">Clínicos</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td>Configuración del sistema</td><td class="si">Editar</td><td class="parcial">Leer</td><td class="parcial">Leer</td><td class="parcial">Leer</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.8rem;color:var(--texto-tenue);margin-top:10px;">"Leer" = acceso de solo lectura justificado por necesidad operativa (ej. el veterinario necesita ver inventario para saber si hay stock del medicamento antes de prescribir). Verifica los casos exactos de tu equipo revisando <code>SecurityConfig.java</code> antes de la defensa — esta tabla es la foto general, no todos los sub-endpoints siguen exactamente este patrón.</p>
+  </div>
+</section>
+
+<section class="seccion" id="endpoint-demo">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterio 8 de la rúbrica</p>
+    <h2 class="titulo-seccion">Cómo demostrar "endpoints públicos vs. protegidos"</h2>
+    <p class="sub-seccion">La rúbrica pide explícitamente una demo en vivo desde el frontend. Aquí tienes el guion de esa demo:</p>
+
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3>1. Endpoint público (sin login)</h3>
+        <p>Abre el login sin sesión y muestra que <code>GET /api/cfgs_sistema</code> responde 200 — es necesario para pintar el nombre/logo de la clínica en la pantalla de login antes de autenticarse.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>2. Endpoint protegido sin sesión → 401</h3>
+        <p>Con la sesión cerrada, intenta entrar directo por URL a <code>pages/Administrador/personal_admin.html</code> o llama <code>GET /api/empleados</code> desde la consola del navegador — la API responde <strong>401 Unauthorized</strong> (no hay cookie <code>authToken</code> válida).</p>
+      </div>
+      <div class="tarjeta">
+        <h3>3. Rol equivocado → 403 / pantalla de acceso denegado</h3>
+        <p>Inicia sesión como Recepcionista y navega manualmente a una URL de Administrador. El guard de <code>estructura_base_controller.js</code> compara el rol contra <code>rolesPermitidos</code> y redirige a <code>pages/acceso_denegado.html</code>; si se intenta por API directamente, el backend responde <strong>403 Forbidden</strong>.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>4. Botón "Atrás" tras cerrar sesión</h3>
+        <p>Cierra sesión y pulsa "Atrás" en el navegador. Gracias al listener de <code>pageshow</code> (evento <code>persisted</code>), la página se recarga y vuelve a pedir login — no se queda mostrando la pantalla cacheada del dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor">
+    ⬅ <a href="base-datos.html">Base de datos</a> &nbsp;·&nbsp; Siguiente: <a href="conceptos-clave.html">Conceptos clave →</a>
+  </div>
+</footer>
+
+<button class="volver-arriba" data-volver-arriba aria-label="Volver arriba">↑</button>
+
+<script src="js/base.js"></script>
+<script src="js/script_roles.js"></script>
+</body>
+</html>

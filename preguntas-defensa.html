@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Posibles Preguntas · PetCore Repaso</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style_preguntas.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__marca"><span class="nav__logo">🐾</span> PetCore · Repaso</a>
+    <button class="nav__toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <ul class="nav__links" data-nav-links>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="arquitectura-backend.html">Backend</a></li>
+      <li><a href="arquitectura-frontend.html">Frontend &amp; App</a></li>
+      <li><a href="base-datos.html">Base de datos</a></li>
+      <li><a href="roles-permisos.html">Roles &amp; CRUD</a></li>
+      <li><a href="conceptos-clave.html">Conceptos clave</a></li>
+      <li><a href="preguntas-defensa.html">Preguntas</a></li>
+      <li><a href="guion-presentacion.html">Guion</a></li>
+    </ul>
+    <button class="nav__tema" data-tema-toggle aria-label="Cambiar tema">🌙</button>
+  </div>
+</nav>
+
+<header class="hero-pagina">
+  <div class="contenedor">
+    <span class="hero-pagina__kicker">Criterio 10 · Dominio teórico y funcional</span>
+    <h1>Banco de preguntas para la defensa externa</h1>
+    <p>Organizado por criterio de la rúbrica y por dificultad. Practica primero las <strong>fáciles</strong> hasta que salgan automáticas, luego las <strong>intermedias</strong>, y deja las <strong>difíciles</strong> para cuando el equipo ya se sienta cómodo — son las que más impresionan al jurado si las responden con seguridad.</p>
+  </div>
+</header>
+
+<!-- ============ Barra de filtro por dificultad (sticky) ============ -->
+<div class="barra-filtro" id="barra-filtro">
+  <div class="contenedor barra-filtro__inner">
+    <span class="barra-filtro__etiqueta">Filtrar por dificultad:</span>
+    <div class="barra-filtro__botones" role="group" aria-label="Filtrar preguntas por dificultad">
+      <button class="chip-filtro activo" data-filtro="todas">Todas <span class="chip-filtro__contador" data-contador="todas"></span></button>
+      <button class="chip-filtro chip-facil" data-filtro="facil">🟢 Fáciles <span class="chip-filtro__contador" data-contador="facil"></span></button>
+      <button class="chip-filtro chip-intermedia" data-filtro="intermedia">🟡 Intermedias <span class="chip-filtro__contador" data-contador="intermedia"></span></button>
+      <button class="chip-filtro chip-dificil" data-filtro="dificil">🔴 Difíciles <span class="chip-filtro__contador" data-contador="dificil"></span></button>
+    </div>
+  </div>
+</div>
+
+<section class="seccion">
+  <div class="contenedor">
+
+    <div class="bloque-criterio" data-criterio>
+      <h2 class="titulo-criterio"><span class="num-criterio">1</span> Documentación del sistema</h2>
+      <div class="acordeon">
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué tipo de documentación tiene el proyecto?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Dos tipos: <strong>manual de usuario</strong> (con capturas de pantalla paso a paso, dirigido al personal de la clínica) y <strong>documentación técnica</strong> (cómo instalar y ejecutar el proyecto: backend con Maven, frontend estático, variables de entorno), más <strong>diagramas</strong> (casos de uso, entidad-relación) que explican el funcionamiento interno.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Dónde pueden encontrar el manual de usuario?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Indica la ubicación real de tu equipo (repositorio, carpeta de documentación, o anexo entregado al jurado). Prepárala con anticipación — es una pregunta de "sí o no" que no debería tomarlos por sorpresa.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Por qué separar documentación técnica de documentación de usuario?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Son audiencias distintas con necesidades distintas: el personal de la clínica (veterinarios, recepcionistas) necesita saber <em>cómo usar</em> el sistema sin jerga técnica, mientras que un desarrollador que dé mantenimiento necesita saber <em>cómo está construido</em> (arquitectura, variables de entorno, cómo correrlo localmente). Mezclarlas hace que ambos documentos terminen siendo inútiles para su audiencia real.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué diagramas incluyeron y qué muestra cada uno?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Típicamente: <strong>diagrama de casos de uso</strong> (qué puede hacer cada rol — es la base del criterio 8, protección de endpoints), <strong>diagrama entidad-relación</strong> (las 48 tablas y sus relaciones, ver <a href="base-datos.html">Base de datos</a>), y opcionalmente un <strong>diagrama de arquitectura</strong> (cómo se comunican frontend, backend, base de datos y app móvil). Ajusta esta respuesta a los diagramas reales que tu equipo entregó.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si un desarrollador nuevo se uniera al equipo mañana, ¿qué necesitaría leer primero y en qué orden?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Buena respuesta estructurada: 1) documentación técnica de instalación (para tener el proyecto corriendo localmente), 2) el diagrama de arquitectura general (para entender cómo se conectan las piezas), 3) el modelo entidad-relación (para entender el dominio del negocio), y 4) el código de un módulo completo de ejemplo (ej. "Especie") para entender el patrón repetido en los 47 módulos antes de tocar cualquiera de los otros.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque-criterio" data-criterio>
+      <h2 class="titulo-criterio"><span class="num-criterio">2-3</span> Diseño de interfaces (web y móvil)</h2>
+      <div class="acordeon">
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué significa que un diseño sea "responsive"?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Que la interfaz se adapta automáticamente al tamaño de pantalla donde se vea — un celular, una tablet o una computadora — reacomodando o escondiendo elementos para que siga siendo cómoda de usar, sin que el usuario tenga que hacer zoom o scroll horizontal.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué framework CSS usaron y por qué?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p><strong>Bootstrap 5.3.8</strong>, por su sistema de grid y utilidades ya probadas (botones, tarjetas, offcanvas) que aceleran el desarrollo sin tener que escribir CSS responsive desde cero para cada componente — complementado con CSS propio para la identidad visual de PetCore.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cómo decide el sistema cuándo mostrar sidebar fija vs. menú hamburguesa?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Combinando dos señales en JavaScript: el ancho de pantalla (<code>window.innerWidth</code>) y el <code>navigator.userAgent</code> para detectar si es un dispositivo móvil. Por debajo de cierto umbral (~992px) o en un dispositivo móvil detectado, la sidebar se colapsa en un menú hamburguesa flotante en vez de quedar fija a la izquierda.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué diferencias de experiencia hay entre el dashboard de Administrador y el de Farmacéutico?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El dashboard de Administrador prioriza indicadores generales (reportes, personal, inventario global), mientras que el del Farmacéutico está optimizado para velocidad operativa: el punto de venta (POS) es la pantalla principal, pensada para escanear/buscar productos rápido durante una venta, no para analizar datos.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Cómo garantizan consistencia visual entre más de 60 páginas sin un framework de componentes como React?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Con disciplina de convenciones en vez de componentes reutilizables automáticos: una hoja de variables CSS compartida (<code>style_global_compartido.css</code>) que define colores, tipografía y tema oscuro/claro para todo el sitio; un patrón repetido de estructura HTML por tipo de página (dashboard, listado CRUD, formulario); y un controller común (<code>estructura_base_controller.js</code>) que genera la sidebar, navbar y lógica compartida en tiempo de ejecución para que no haya que copiar-pegar ese HTML en cada una de las 60+ páginas.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque-criterio" data-criterio>
+      <h2 class="titulo-criterio"><span class="num-criterio">4-5</span> Funcionalidad del sistema (CRUD web y móvil)</h2>
+      <div class="acordeon">
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué significa CRUD?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p><strong>C</strong>rear, <strong>R</strong>ead/Leer, <strong>U</strong>pdate/Actualizar, <strong>D</strong>elete/Eliminar — las cuatro operaciones básicas que se pueden hacer sobre cualquier dato persistente del sistema, por ejemplo un empleado, una mascota o un producto.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>Demuestre crear, editar y eliminar un registro en vivo</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Elige un módulo simple (ej. Especie/Raza/Pelaje): <strong>Crear</strong> un registro → <strong>Leer</strong> el listado actualizado al instante → <strong>Actualizar</strong> ese registro y ver el cambio reflejado → <strong>Eliminar</strong> y confirmar que desaparece. Narra en voz alta que cada acción dispara un <code>fetch</code> al endpoint correspondiente.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué pasa si el backend está caído cuando intento guardar algo?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El interceptor global de <code>fetch</code> (<code>fetch_con_credenciales.js</code>) detecta errores 502/503/504 y reintenta automáticamente con backoff creciente (1.5s, 3s, 5s, 8s) — pensado para el "cold start" de Heroku. Si después de los reintentos sigue sin responder, se muestra una alerta clara al usuario en vez de dejar el formulario colgado sin explicación.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cómo manejan la paginación en listados grandes?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El backend expone endpoints de búsqueda paginada (apoyados en <code>config/paginacion/PaginacionUtils.java</code>) que devuelven solo un bloque de resultados por vez en vez de la tabla completa — importante para módulos con muchos registros como Expedientes o Ventas, donde cargar todo de golpe sería lento y gastaría memoria innecesaria.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Qué pasa si dos usuarios editan el mismo registro al mismo tiempo?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Respuesta honesta recomendada: el sistema actualmente sigue la estrategia más simple ("el último que guarda, gana" — <em>last write wins</em>), sin bloqueo optimista por versión. Es una mejora identificada: agregar un campo de versión (<code>@Version</code> de JPA) a las entidades más sensibles a concurrencia (ej. inventario, citas) para detectar y avisar si alguien más modificó el registro mientras tanto.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Qué pasaría con la integridad de datos si eliminan una mascota que ya tiene expedientes clínicos?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Las llaves foráneas (<code>FK_*</code>) de Oracle lo impiden por defecto: no se puede eliminar un registro padre (Mascota) mientras existan registros hijos (Expediente, Citas, Hospitalización) que dependan de él — la base de datos lanza un error de integridad referencial, que el backend traduce a un <strong>409 Conflict</strong> en vez de dejar expedientes "huérfanos" apuntando a una mascota que ya no existe. Por eso PetCore usa baja lógica (<code>EMP_ESTADO = 'Inactivo'</code>) en vez de borrado físico para registros con historial clínico.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque-criterio" data-criterio>
+      <h2 class="titulo-criterio"><span class="num-criterio">6</span> Validaciones e integridad de datos</h2>
+      <div class="acordeon">
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué es una validación de datos?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Es la verificación de que un dato cumple el formato o tipo esperado antes de guardarlo — por ejemplo, que un correo tenga el formato <code>algo@dominio.com</code>, que una fecha de nacimiento no sea futura, o que un campo numérico no contenga letras.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>Dé un ejemplo real de un campo validado en PetCore</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El DUI del empleado: debe cumplir el formato salvadoreño <code>00000000-0</code>, validado con una expresión regular tanto en el DTO del backend (<code>@Pattern</code>) como con un <code>CHECK CONSTRAINT</code> en la propia base de datos Oracle.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué diferencia hay entre validar en el frontend y validar en el backend?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El frontend valida para dar <strong>feedback inmediato</strong> sin esperar un viaje al servidor, pero se puede saltar fácilmente (herramientas de desarrollador, Postman). La validación que realmente <strong>garantiza</strong> la integridad de los datos ocurre en el backend — nunca se debe confiar en que un dato ya viene validado solo porque pasó por el frontend.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué pasa si suben un archivo que no es una imagen como foto de perfil?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El input del frontend restringe la selección con <code>accept="image/*"</code>, pero eso es solo una sugerencia del navegador. La validación real ocurre al subir el archivo: Cloudinary y/o el backend verifican el tipo MIME real del archivo antes de aceptarlo, y hay un límite de tamaño configurado (10MB) para evitar subidas abusivas.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Cómo aseguran que una prescripción médica no tenga una dosis fuera de rango, sin hardcodear reglas para cada fármaco?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>A través de la tabla <code>TBL_POSOLOGIA_FARMACO</code>: cada producto farmacéutico tiene asociada su posología de referencia (dosis mínima/máxima recomendada), y el formulario de prescripción puede validar contra ese catálogo en vez de tener un valor fijo en el código — así agregar un medicamento nuevo con su propio rango de dosis no requiere tocar la lógica de validación, solo un nuevo registro en el catálogo.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque-criterio" data-criterio>
+      <h2 class="titulo-criterio"><span class="num-criterio">7</span> Autenticación y roles de usuario</h2>
+      <div class="acordeon">
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Cuántos roles hay en el sistema y cuáles son?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Cinco en total: <strong>Administrador</strong>, <strong>Veterinario</strong>, <strong>Recepcionista</strong> y <strong>Farmacéutico</strong> (personal, usan el portal web), más <strong>Propietario</strong> (dueño de mascotas, usa la app móvil).</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué pasa si escribo mal la contraseña al iniciar sesión?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El backend responde con un error de credenciales inválidas (401), sin especificar si fue el correo o la contraseña lo que falló — por seguridad, nunca se revela cuál de los dos campos fue el incorrecto, para no facilitarle información a alguien intentando adivinar cuentas válidas.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué es un hash y por qué no guardan la contraseña tal cual en la base de datos?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Un hash es el resultado de una función matemática de un solo sentido: a partir de la contraseña se puede calcular el hash, pero no al revés. Si guardaran la contraseña en texto plano y alguien accediera a la base de datos, tendría acceso directo a todas las cuentas; guardando solo el hash (con Argon2), aunque roben la base de datos no pueden recuperar la contraseña original.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué es Argon2 y por qué lo eligieron?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Argon2 es el algoritmo ganador de la Password Hashing Competition (2015), diseñado específicamente para ser lento y costoso en memoria a propósito — eso dificulta mucho que un atacante pruebe millones de contraseñas por segundo (ataque de fuerza bruta) aunque tenga acceso a los hashes robados. Es considerado más resistente que alternativas más antiguas como MD5 o SHA-256 sin "salt", que fueron diseñadas para ser rápidas (lo contrario de lo que se necesita para contraseñas).</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si el servidor de correo (SMTP) se cae, ¿qué le pasa al flujo de recuperación de contraseña?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Respuesta honesta: el usuario no recibiría el código de recuperación y el flujo quedaría bloqueado en ese paso — es una dependencia externa del sistema. Una mejora posible sería agregar un mecanismo de reintento con cola, o un canal alterno (ej. recuperación asistida por un Administrador desde el panel de personal) para no depender 100% de que el correo llegue.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque-criterio" data-criterio>
+      <h2 class="titulo-criterio"><span class="num-criterio">8</span> Protección de endpoints y vistas</h2>
+      <div class="acordeon">
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué pasa si entro a una URL del sistema sin haber iniciado sesión?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El guard de <code>estructura_base_controller.js</code> detecta que no hay sesión válida y redirige automáticamente al login — nunca se llega a ver el contenido de la página protegida, ni por un instante.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cuál es la diferencia entre un error 401 y un error 403?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p><strong>401 Unauthorized</strong> significa "no sé quién eres" — no hay credenciales válidas (sin sesión, token expirado). <strong>403 Forbidden</strong> significa "sé quién eres, pero no tienes permiso" — hay una sesión válida, pero el rol del usuario no está autorizado para ese endpoint específico. PetCore usa ambos correctamente: el filtro JWT determina 401, y las reglas de <code>SecurityConfig.java</code> determinan 403.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué es el bfcache y cómo lo bloquean?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El bfcache (back-forward cache) es una optimización del navegador que restaura una página desde memoria al navegar "Atrás", sin recargarla ni re-ejecutar su JavaScript desde cero. PetCore escucha el evento <code>pageshow</code> y, si <code>event.persisted</code> es verdadero, fuerza un <code>location.reload()</code>, lo que vuelve a ejecutar la verificación de sesión y expulsa al usuario si ya cerró sesión.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si alguien interceptara el tráfico de red y robara la cookie httpOnly directamente (no vía JavaScript), ¿qué pasaría?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Respuesta honesta: <code>httpOnly</code> protege contra robo vía JavaScript (XSS), pero no contra un atacante que intercepte el tráfico de red directamente (ataque "man-in-the-middle"). Contra eso protege <strong>HTTPS/TLS</strong> (toda la comunicación va cifrada en tránsito) y el atributo <code>Secure</code> de la cookie (solo se envía por HTTPS, nunca por HTTP sin cifrar) — ambos presentes en el despliegue de PetCore en Vercel y Heroku.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Por qué el endpoint de WebSocket es público? ¿Eso no es una falla de seguridad?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Es una debilidad real y reconocida: el handshake inicial de <code>/ws</code> no valida el JWT todavía. Sin embargo, el canal solo transmite eventos de notificación general (no datos sensibles por usuario específico), por lo que el impacto práctico es limitado — aun así, es la mejora de seguridad pendiente más clara a mencionar si preguntan por debilidades del sistema. Decirlo con seguridad, en vez de evitarlo, demuestra dominio real.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque-criterio" data-criterio>
+      <h2 class="titulo-criterio"><span class="num-criterio">9</span> Despliegue</h2>
+      <div class="acordeon">
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Dónde está alojado cada componente del sistema?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p><strong>Frontend</strong> en Vercel, <strong>API/Backend</strong> en Heroku, <strong>base de datos</strong> en Oracle Cloud (gestionada con SQL Developer), y la <strong>app móvil</strong> instalada directamente en un dispositivo Android físico.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué es un "cold start" en Heroku y cómo lo manejan?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>En el plan gratuito/económico de Heroku, el servidor "duerme" tras un período sin tráfico, y la primera petición después de eso tarda varios segundos extra en responder mientras el dyno despierta. PetCore lo maneja con reintentos automáticos en el frontend (backoff creciente ante 502/503/504) y un workflow de GitHub Actions que hace ping periódico para reducir cuánto tiempo pasa dormido.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cómo se conectan los tres servicios (Vercel, Heroku, Oracle) entre sí en producción?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>El frontend (Vercel) hace peticiones HTTP/HTTPS al backend (Heroku) usando su URL pública, configuradas como origen permitido en CORS. El backend (Heroku) se conecta a la base de datos (Oracle Cloud) usando el driver JDBC <code>ojdbc11</code> y credenciales en variables de entorno — son tres servicios totalmente independientes que solo se "conocen" por configuración, no por estar en la misma red o servidor físico.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si Heroku reinicia el dyno y pierde todo el estado en memoria, ¿qué garantiza que los usuarios no pierdan su sesión?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Precisamente el diseño <strong>stateless</strong> de la autenticación: la sesión no vive en memoria del servidor (no hay una tabla ni un mapa de sesiones activas), sino en el JWT dentro de la cookie del navegador del usuario. Si el dyno se reinicia, el nuevo proceso puede validar esa cookie igual que el anterior, porque la firma del JWT depende solo del secreto compartido (<code>SECRET_KEY_JWT</code>), no de ningún estado que se haya perdido.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque-criterio" data-criterio>
+      <h2 class="titulo-criterio"><span class="num-criterio">10</span> Dominio teórico y funcional</h2>
+      <div class="acordeon">
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Cuántos módulos y tablas tiene el sistema aproximadamente?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>~47 módulos funcionales en el backend (uno por entidad principal) y 48 tablas en la base de datos Oracle, organizadas en 6 dominios: personal, catálogos clínicos, atención clínica, inventario/ventas, comunicación y RRHH.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cuál fue la parte más difícil de construir en equipo?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Respuesta sugerida (ajústala con tu equipo): coordinar el modelo de permisos "deny by default" a través de ~47 módulos sin dejar ningún endpoint sin proteger, y sincronizar manualmente la lista de orígenes de CORS entre la configuración HTTP normal y el handshake de WebSocket.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cómo se dividió el trabajo entre los 6 integrantes del equipo?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Ajusta esta respuesta a la realidad de tu equipo (por módulos, por capa frontend/backend/BD, por rol de usuario del sistema). Lo importante para el jurado es ver que hubo una división clara y que cada integrante puede explicar tanto su parte como, al menos a grandes rasgos, el resto del sistema — el criterio 10 evalúa a cada integrante individualmente.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si tuvieran más tiempo, ¿qué mejorarían?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Buena respuesta honesta, ya identificada en el propio código: securizar el handshake de <code>/ws</code> (hoy público, pendiente validar el JWT ahí también), añadir bloqueo optimista por versión para evitar condiciones de carrera en ediciones simultáneas, y agregar cacheo de assets estáticos en el Service Worker para mejor soporte offline.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Por qué eligieron Oracle y no MySQL/PostgreSQL?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Es el requisito de la institución para esta defensa (gestionado con SQL Developer en Oracle Cloud). Técnicamente, el proyecto usa el driver <code>ojdbc11</code> + Hibernate configurado con el dialecto de Oracle, y <code>GenerationType.IDENTITY</code> en las entidades está elegido específicamente por ser compatible con el motor de autoincremento de Oracle.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Qué cambiarían si tuvieran que escalar este sistema a 50 clínicas en vez de una sola?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Buena respuesta de arquitectura: agregar <strong>multi-tenancy</strong> (una columna o esquema separado por clínica para aislar los datos de cada una), mover de un único dyno de Heroku a múltiples instancias con balanceo de carga, y posiblemente separar la base de datos por clínica o agregar particionamiento en las tablas más grandes (Expedientes, Citas) para que el rendimiento no se degrade con el volumen.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Por qué una arquitectura modular por feature en vez de la clásica por capas?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>En una arquitectura por capas clásica (todos los controllers juntos, todos los services juntos), con 47 entidades esas carpetas se vuelven inmanejables — encontrar todo lo relacionado a "Citas" implica saltar entre 5 carpetas distintas. La organización modular por feature agrupa todo lo de una entidad (controller, service, repository, entity, dto, exceptions) en una sola carpeta, lo que facilita trabajar en equipo sin pisarse (cada integrante puede "dueño" de sus módulos) y entender un dominio completo sin saltar por todo el proyecto.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="contenedor">
+    ⬅ <a href="conceptos-clave.html">Conceptos clave</a> &nbsp;·&nbsp; Siguiente: <a href="guion-presentacion.html">Guion de presentación →</a>
+  </div>
+</footer>
+
+<button class="volver-arriba" data-volver-arriba aria-label="Volver arriba">↑</button>
+
+<script src="js/base.js"></script>
+<script src="js/script_preguntas.js"></script>
+</body>
+</html>
