@@ -122,7 +122,7 @@
         <span class="timeline__punto"></span>
         <div class="paso-cabecera"><h3>1. Apertura y presentación del equipo</h3><span class="chip-tiempo">~2 min</span></div>
         <p><strong>Presentador 1:</strong> "Buenos días/tardes, somos parte del equipo PetCore. Hoy les presentamos un sistema integral de gestión veterinaria, desarrollado con Java y Spring Boot en el backend, HTML/CSS/Bootstrap/JavaScript sin frameworks en el frontend, base de datos Oracle, y una app móvil con Capacitor."</p>
-        <p><strong>Presentador 2:</strong> "El sistema cubre todo el flujo de una clínica real: desde que un propietario agenda una cita, pasando por la atención clínica del veterinario, hasta el despacho de medicamentos en farmacia — con cuatro roles de personal: Administrador, Veterinario, Recepcionista y Farmacéutico, más un quinto rol de Propietario para la app móvil."</p>
+        <p><strong>Presentador 2:</strong> "El sistema cubre todo el flujo de una clínica real: desde que un propietario agenda una cita, pasando por la atención clínica del veterinario, hasta el despacho de medicamentos en farmacia — con cuatro roles de personal: Administrador, Veterinario, Recepcionista y Farmacéutico, más un quinto rol de Propietario para la app móvil. Vamos a demostrarles los cinco, uno por uno."</p>
         <p class="indicacion">🎯 Aunque solo 2 estén presentando, pueden mencionar: "somos un equipo de 6 integrantes; hoy nos corresponde a nosotros dos presentar, pero todo el equipo domina el sistema completo." Es una forma honesta de anticipar por qué no están los 6.</p>
       </div>
 
@@ -134,13 +134,16 @@
 
       <div class="timeline__paso">
         <span class="timeline__punto"></span>
-        <div class="paso-cabecera"><h3>3. Demo del sistema web (Vercel) <span class="chip-criterio">Criterios 2, 4, 7</span></h3><span class="chip-tiempo">~8 min</span></div>
-        <p>Abrir la URL pública de Vercel en vivo (nunca localhost — remarquen que es la URL pública). Mostrar:</p>
+        <div class="paso-cabecera"><h3>3. Demo del sistema web: los 4 roles de personal (Vercel) <span class="chip-criterio">Criterios 2, 4, 7</span></h3><span class="chip-tiempo">~14 min</span></div>
+        <p>Abrir la URL pública de Vercel en vivo (nunca localhost — remarquen que es la URL pública). El sistema web tiene <strong>cuatro roles de personal</strong> y cada uno debe quedar demostrado por separado, con su propio dashboard y su propio CRUD — no basta con mostrar solo Administrador.</p>
         <ul class="lista-indicaciones">
-          <li><strong>Login</strong> como Administrador → recorrido del dashboard → un <strong>CRUD completo</strong> (crear, editar, eliminar un registro) en un módulo simple, narrando que cada acción pasa por validación en el frontend y en el backend.</li>
-          <li><strong>Responsive:</strong> si hay forma de reducir la ventana o cambiar de dispositivo en vivo, mostrar cómo la interfaz se reacomoda.</li>
-          <li><strong>Cambio de rol:</strong> cerrar sesión, iniciar como Veterinario (o Recepcionista/Farmacéutico) y mostrar que el dashboard y las opciones disponibles son distintas — "esto no es solo visual, el backend también bloquea estas acciones para otros roles, lo vamos a demostrar en el siguiente punto."</li>
+          <li><strong>🟠 Administrador:</strong> login → recorrido del dashboard general → <strong>CRUD completo</strong> en un módulo de su exclusividad (ej. Personal o Servicios): crear, editar y eliminar un registro, narrando que cada acción pasa por validación en el frontend y en el backend.</li>
+          <li><strong>🟢 Veterinario:</strong> cerrar sesión, login como Veterinario → mostrar que el dashboard cambia por completo → abrir el expediente clínico de una mascota y registrar un diagnóstico o actualizar una cita como atendida.</li>
+          <li><strong>🔵 Recepcionista:</strong> cerrar sesión, login como Recepcionista → registrar una mascota/propietario nuevo (el único rol que puede crear mascotas) → agendar una cita.</li>
+          <li><strong>🟣 Farmacéutico:</strong> cerrar sesión, login como Farmacéutico → mostrar el Punto de Venta (POS) → registrar una venta rápida de un producto, mostrando cómo descuenta el stock automáticamente.</li>
+          <li><strong>Responsive:</strong> si hay forma de reducir la ventana o cambiar de dispositivo en vivo (en cualquiera de los 4 logins anteriores), mostrar cómo la interfaz se reacomoda.</li>
         </ul>
+        <p class="indicacion">🎯 Narren en cada cambio de rol: "esto no es solo visual — el backend también bloquea estas acciones para los otros roles, lo vamos a demostrar en el siguiente punto." Repartirse los 4 roles entre los 2 presentadores (2 cada uno) agiliza esta parte y evita que uno solo hable todo el tiempo.</p>
       </div>
 
       <div class="timeline__paso">
@@ -171,9 +174,15 @@
 
       <div class="timeline__paso">
         <span class="timeline__punto"></span>
-        <div class="paso-cabecera"><h3>7. Demo de la app móvil (Android físico) <span class="chip-criterio">Criterios 3, 5, 9</span></h3><span class="chip-tiempo">~6 min</span></div>
-        <p>Con la app ya instalada en un dispositivo físico: login como propietario (con Google si aplica), mostrar sus mascotas, un CRUD simple desde la app, y una notificación push si es posible demostrarla en vivo.</p>
-        <p class="indicacion">🎯 Mencionar que es el mismo frontend web empaquetado con Capacitor dentro de un WebView nativo — refuerza dominio técnico y explica por qué la interfaz se ve igual que en la web.</p>
+        <div class="paso-cabecera"><h3>7. Demo de la app móvil: el quinto rol, Propietario (Android físico) <span class="chip-criterio">Criterios 3, 5, 9</span></h3><span class="chip-tiempo">~7 min</span></div>
+        <p>Con la app ya instalada en el dispositivo físico: "hasta ahora vimos los 4 roles de personal en la web — este quinto rol, Propietario, es para el dueño de la mascota, y vive solo en la app móvil." Mostrar en vivo:</p>
+        <ul class="lista-indicaciones">
+          <li><strong>Login</strong> como propietario (con "Iniciar sesión con Google" si tu equipo lo tiene activo) → recorrido de la pantalla principal.</li>
+          <li><strong>Ver sus mascotas</strong> y abrir el historial clínico de una (solo lectura — "el propietario consulta, pero no edita el historial, eso es exclusivo del personal").</li>
+          <li><strong>Agendar una cita nueva</strong> desde la app — mostrar que, a diferencia del personal, el propietario puede crear una cita pero no editarla ni cancelarla después.</li>
+          <li><strong>Notificación push</strong> en vivo si es posible demostrarla (ej. que llegue un aviso al confirmar la cita).</li>
+        </ul>
+        <p class="indicacion">🎯 Mencionar que es el mismo frontend web empaquetado con Capacitor dentro de un WebView nativo — por eso la interfaz se ve igual que en la web, pero con acceso a funciones nativas del celular (notificaciones push, cámara). Si preguntan por el alcance limitado del rol Propietario, ver la tabla de <a href="roles-permisos.html#propietario-movil">Alcance CRUD del Propietario</a>.</p>
       </div>
 
       <div class="timeline__paso">
@@ -226,7 +235,7 @@
       <div class="timeline__paso">
         <span class="timeline__punto"></span>
         <div class="paso-cabecera"><h3>2. El problema que resuelve</h3><span class="chip-tiempo">~30 seg</span></div>
-        <p>"Muchas clínicas veterinarias todavía llevan el control en papel o en Excel: citas, historiales médicos, inventario de medicamentos. Eso hace lento atender a un cliente y fácil perder información importante, como si una mascota es alérgica a algún medicamento. PetCore centraliza todo eso en un solo sistema."</p>
+        <p>"Muchas clínicas veterinarias todavía llevan el control en papel o en Excel: citas, historiales médicos, inventario de medicamentos. Eso hace lento atender a un cliente y fácil perder información importante, como si una mascota es alérgica a algún medicamento. PetCore centraliza todo eso en un solo sistema, con una pantalla distinta para cada tipo de empleado — administración, veterinario, recepción y farmacia — y una app aparte para el dueño de la mascota."</p>
       </div>
 
       <div class="timeline__paso">
