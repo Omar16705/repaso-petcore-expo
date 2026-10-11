@@ -94,6 +94,35 @@
   </div>
 </section>
 
+<section class="seccion seccion--alt" id="propietario-movil">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Criterio 5 de la rúbrica · App móvil</p>
+    <h2 class="titulo-seccion">Alcance CRUD real del rol Propietario en la app móvil</h2>
+    <p class="sub-seccion">El Propietario es el quinto rol del sistema (dueño de mascota, usa la app móvil). Es <strong>intencionalmente limitado</strong>: consume información clínica, no la genera ni la edita — esa es responsabilidad exclusiva del personal (Veterinario/Recepcionista). Verificado directamente contra <code>SecurityConfig.java</code>, no son suposiciones:</p>
+
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Módulo</th><th>Lo que SÍ puede hacer</th><th>Lo que NO puede hacer (y por qué)</th></tr></thead>
+        <tbody>
+          <tr><td>Mascotas</td><td>Ver sus propias mascotas; actualizar solo la <strong>foto</strong> (<code>PUT /mascotas/{id}/foto</code>)</td><td>Registrar una mascota nueva ni editar sus datos clínicos (raza, peso, estado) — eso requiere verificación presencial del personal, por eso <code>POST/PUT /mascotas</code> es solo de Recepcionista.</td></tr>
+          <tr><td>Citas</td><td>Ver sus citas; <strong>crear</strong> una cita nueva (<code>POST /citas</code>)</td><td>Editar o cancelar una cita ya creada, ni cambiar su estado — eso lo gestiona Recepcionista/Veterinario, para evitar que un propietario cancele una cita sin que la clínica se entere a tiempo.</td></tr>
+          <tr><td>Expediente clínico</td><td>Ver su historial médico (solo lectura, <code>GET /expedientes/mascota/{id}</code>)</td><td>Editar diagnósticos, notas clínicas o tratamientos — es información médica que solo el Veterinario puede generar.</td></tr>
+          <tr><td>Cartillas de vacunación</td><td>Ver (solo lectura)</td><td>Editar o eliminar un registro de vacunación.</td></tr>
+          <tr><td>Antiparasitarios</td><td>Ver (solo lectura)</td><td>Editar o eliminar un registro de aplicación.</td></tr>
+          <tr><td>Cuidados (contenido educativo)</td><td>Ver recomendaciones por especie/raza/etapa de vida</td><td>Editar el catálogo — lo mantiene el personal clínico.</td></tr>
+          <tr><td>Ventas propias</td><td>Ver su propio historial de compras en farmacia</td><td>Editar o eliminar una venta — esa es responsabilidad del Farmacéutico.</td></tr>
+          <tr><td>Notificaciones</td><td>Ver las propias; marcarlas como leídas (individual o todas)</td><td>Ver o modificar notificaciones de otro usuario.</td></tr>
+          <tr><td>Perfil propio</td><td>Ver y autoeditar sus datos, cambiar su contraseña, desvincular su cuenta de Google</td><td>Editar el perfil de otro propietario.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota nota--exito" style="margin-top:14px;">
+      <strong>Frase lista para la defensa</strong> si el jurado pide "demuestren que el propietario puede eliminar una cita o una mascota": <em>"Esa acción está reservada al personal de la clínica por diseño, no es una omisión — el propietario es quien consume la información clínica y agenda citas, pero quien la gestiona y modifica siempre es el personal autorizado. Está así desde la configuración de seguridad del backend, no solo oculto en el frontend."</em>
+    </div>
+  </div>
+</section>
+
 <section class="seccion" id="endpoint-demo">
   <div class="contenedor">
     <p class="etiqueta-seccion">Criterio 8 de la rúbrica</p>

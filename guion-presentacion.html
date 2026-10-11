@@ -100,6 +100,10 @@
     <h2 class="titulo-seccion">⚖️ Guion para el Jurado Externo</h2>
     <p class="sub-seccion">Pensado para <strong>2 presentadores</strong> (cualquier pareja del equipo, según el turno). No hay límite de tiempo formal — tómense el tiempo necesario para demostrar cada criterio de la rúbrica con calma y seguridad; es preferible ir despacio y claro que apurado y confuso. Los pasos están escritos como "Presentador 1 / Presentador 2" intercambiables: decidan entre ustedes dos, al momento, quién toma cada bloque según de qué se sientan más seguros ese día.</p>
 
+    <div class="nota nota--alerta" style="margin-bottom:24px;">
+      ⚠️ <strong>Antes de empezar, en cualquiera de los 8 turnos:</strong> verifiquen en vivo que <code>petcore-seven.vercel.app</code> (y/o <code>petcore-oerh.vercel.app</code>) sigue activo, que la API de Heroku ya está "despierta" (eviten el cold start justo frente al jurado), y que la app móvil está instalada y probada en el dispositivo físico que van a usar ese turno. Es la <a href="index.html#verificacion-previa">checklist de verificación técnica en Inicio</a> — tómense 5 minutos para repasarla antes de que llegue el jurado.
+    </div>
+
     <div class="temporizador-wrap">
       <div>
         <p class="etiqueta-seccion" style="margin-bottom:4px;">Cronómetro de práctica (referencial, no es límite real)</p>
@@ -175,7 +179,7 @@
       <div class="timeline__paso">
         <span class="timeline__punto"></span>
         <div class="paso-cabecera"><h3>8. Arquitectura y dominio técnico profundo <span class="chip-criterio">Criterio 10</span></h3><span class="chip-tiempo">Sin límite — el tiempo que el jurado necesite</span></div>
-        <p>Resumen en pizarra o diapositiva: arquitectura modular del backend (controller → service → repository → entity, ~47 módulos), flujo de autenticación (JWT firmado dentro de una cookie httpOnly, no en localStorage), y el patrón de seguridad "deny by default" (todo bloqueado salvo lo explícitamente permitido).</p>
+        <p>Resumen en pizarra o diapositiva: arquitectura modular del backend (controller → service → repository → entity, 51 módulos), flujo de autenticación (JWT firmado dentro de una cookie httpOnly, no en localStorage), y el patrón de seguridad "deny by default" (todo bloqueado salvo lo explícitamente permitido).</p>
         <p>A partir de aquí, el jurado normalmente empieza a preguntar libremente. Mantengan la calma, respondan con seguridad, y si no saben algo con certeza, es mejor decir <em>"no estoy 100% seguro de ese detalle específico, pero lo que sí puedo explicar es..."</em> que inventar una respuesta. Repasen a fondo el <a href="preguntas-defensa.html">banco de preguntas</a> (filtren por dificultad: empiecen por las fáciles) y los <a href="conceptos-clave.html">conceptos clave</a> antes del día de la defensa.</p>
       </div>
 

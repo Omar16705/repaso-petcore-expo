@@ -79,7 +79,29 @@
   </div>
 </section>
 
-<section class="seccion seccion--alt">
+<section class="seccion seccion--alt" id="verificacion-previa">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">La noche/mañana antes de entrar</p>
+    <h2 class="titulo-seccion">Verificación técnica de último momento (criterio 9)</h2>
+    <p class="sub-seccion">No basta con que el sistema haya funcionado la semana pasada — Vercel y Heroku son servicios externos que pueden caerse, expirar un dominio gratuito, o simplemente tener un "cold start" largo el día de la defensa. Verifíquenlo <strong>en vivo, justo antes</strong> de presentar.</p>
+
+    <div class="progreso-wrap" style="margin-bottom:18px;">
+      <div class="progreso-barra"><div class="progreso-relleno" data-progreso-barra></div></div>
+      <span class="progreso-texto" data-progreso-texto>0 / 6</span>
+    </div>
+
+    <div class="rejilla" data-checklist-id="predefensa" style="gap:12px;">
+      <label class="check-item"><input type="checkbox" data-key="vercel-seven"><span><strong>Vercel activo (dominio 1)</strong><br>Abrir <code>petcore-seven.vercel.app</code> en el navegador y confirmar que carga el login, no un error 404/expirado.</span></label>
+      <label class="check-item"><input type="checkbox" data-key="vercel-oerh"><span><strong>Vercel activo (dominio 2)</strong><br>Lo mismo con <code>petcore-oerh.vercel.app</code> si tu equipo usa ambos dominios.</span></label>
+      <label class="check-item"><input type="checkbox" data-key="heroku-despierto"><span><strong>API de Heroku despierta</strong><br>Hacer una petición de prueba (o simplemente cargar el login) unos minutos antes para evitar el "cold start" largo justo delante del jurado.</span></label>
+      <label class="check-item"><input type="checkbox" data-key="login-roles"><span><strong>Login de cada rol funciona en producción</strong><br>Probar iniciar sesión como Administrador, Veterinario, Recepcionista y Farmacéutico contra la URL pública (no localhost).</span></label>
+      <label class="check-item"><input type="checkbox" data-key="app-instalada"><span><strong>App móvil instalada y probada</strong><br>Confirmar que la app está instalada en el dispositivo Android físico que se usará, con la sesión de prueba ya lista y datos de ejemplo cargados.</span></label>
+      <label class="check-item"><input type="checkbox" data-key="bateria-internet"><span><strong>Batería e internet del dispositivo móvil</strong><br>Dispositivo cargado y con datos móviles o WiFi del lugar confirmado — no asuman que el WiFi de la expo va a funcionar igual que en casa.</span></label>
+    </div>
+  </div>
+</section>
+
+<section class="seccion">
   <div class="contenedor">
     <p class="etiqueta-seccion">Navegación</p>
     <h2 class="titulo-seccion">Secciones del repaso</h2>
@@ -100,7 +122,7 @@
       <a class="tarjeta tarjeta-link" href="base-datos.html">
         <span class="tarjeta-link__icono">🗄️</span>
         <h3>Base de datos</h3>
-        <p>48 tablas en Oracle, estándar SCREAMING_SNAKE_CASE, módulos clínicos, de inventario/ventas, RRHH y comunicación. Entidades clave y relaciones.</p>
+        <p>50 tablas en Oracle, estándar SCREAMING_SNAKE_CASE, módulos clínicos, de inventario/ventas, RRHH y comunicación. Entidades clave y relaciones.</p>
       </a>
 
       <a class="tarjeta tarjeta-link" href="roles-permisos.html">

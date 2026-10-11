@@ -63,7 +63,7 @@
       <table>
         <thead><tr><th>Dependencia</th><th>Para qué se usa en PetCore</th></tr></thead>
         <tbody>
-          <tr><td><code>spring-boot-starter-data-jpa</code></td><td>JPA/Hibernate: mapea las 48 tablas Oracle a entidades Java y genera los repositorios.</td></tr>
+          <tr><td><code>spring-boot-starter-data-jpa</code></td><td>JPA/Hibernate: mapea las 50 tablas Oracle a entidades Java y genera los repositorios.</td></tr>
           <tr><td><code>spring-boot-starter-web</code> / <code>-webmvc</code></td><td>Spring MVC: controllers REST, serialización JSON automática.</td></tr>
           <tr><td><code>spring-boot-starter-security</code></td><td>Autenticación/autorización: filtra cada request, aplica roles.</td></tr>
           <tr><td><code>spring-security-crypto</code></td><td>Utilidades criptográficas usadas junto al hashing Argon2 de contraseñas.</td></tr>
@@ -92,7 +92,7 @@
   <div class="contenedor">
     <p class="etiqueta-seccion">Arquitectura</p>
     <h2 class="titulo-seccion">Organización modular por feature (no por capa)</h2>
-    <p class="sub-seccion">En vez de tener una carpeta <code>controllers/</code> gigante con todo mezclado, PetCore usa <strong>~47 módulos verticales</strong> (uno por entidad/tabla) bajo <code>modules/</code>, y cada módulo repite siempre la misma estructura interna de 6 carpetas:</p>
+    <p class="sub-seccion">En vez de tener una carpeta <code>controllers/</code> gigante con todo mezclado, PetCore usa <strong>51 módulos verticales</strong> (uno por entidad/tabla, más módulos transversales como <code>auth</code> y <code>push</code>) bajo <code>modules/</code>, y cada módulo repite siempre la misma estructura interna de 6 carpetas:</p>
 
     <div class="rejilla rejilla--3">
       <div class="tarjeta">
@@ -333,7 +333,7 @@ private String empContrasenia;</code></pre>
         </ul>
       </div>
     </div>
-    <p class="nota nota--exito" style="margin-top:16px;">Cada módulo define sus propias 5 excepciones (ej. <code>CitasNotFoundException</code>) heredando de las clases base globales — así el handler central las atrapa a todas sin tener que registrar 47 handlers distintos.</p>
+    <p class="nota nota--exito" style="margin-top:16px;">Cada módulo define sus propias 5 excepciones (ej. <code>CitasNotFoundException</code>) heredando de las clases base globales — así el handler central las atrapa a todas sin tener que registrar un handler distinto por cada uno de los 51 módulos.</p>
   </div>
 </section>
 

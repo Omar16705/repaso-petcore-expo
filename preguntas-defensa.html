@@ -68,11 +68,11 @@
         </div>
         <div class="acordeon__item" data-dificultad="intermedia">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué diagramas incluyeron y qué muestra cada uno?</span><span class="acordeon__icono">+</span></button>
-          <div class="acordeon__respuesta"><div><p>Típicamente: <strong>diagrama de casos de uso</strong> (qué puede hacer cada rol — es la base del criterio 8, protección de endpoints), <strong>diagrama entidad-relación</strong> (las 48 tablas y sus relaciones, ver <a href="base-datos.html">Base de datos</a>), y opcionalmente un <strong>diagrama de arquitectura</strong> (cómo se comunican frontend, backend, base de datos y app móvil). Ajusta esta respuesta a los diagramas reales que tu equipo entregó.</p></div></div>
+          <div class="acordeon__respuesta"><div><p>Típicamente: <strong>diagrama de casos de uso</strong> (qué puede hacer cada rol — es la base del criterio 8, protección de endpoints), <strong>diagrama entidad-relación</strong> (las 50 tablas y sus relaciones, ver <a href="base-datos.html">Base de datos</a>), y opcionalmente un <strong>diagrama de arquitectura</strong> (cómo se comunican frontend, backend, base de datos y app móvil). Ajusta esta respuesta a los diagramas reales que tu equipo entregó.</p></div></div>
         </div>
         <div class="acordeon__item" data-dificultad="dificil">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si un desarrollador nuevo se uniera al equipo mañana, ¿qué necesitaría leer primero y en qué orden?</span><span class="acordeon__icono">+</span></button>
-          <div class="acordeon__respuesta"><div><p>Buena respuesta estructurada: 1) documentación técnica de instalación (para tener el proyecto corriendo localmente), 2) el diagrama de arquitectura general (para entender cómo se conectan las piezas), 3) el modelo entidad-relación (para entender el dominio del negocio), y 4) el código de un módulo completo de ejemplo (ej. "Especie") para entender el patrón repetido en los 47 módulos antes de tocar cualquiera de los otros.</p></div></div>
+          <div class="acordeon__respuesta"><div><p>Buena respuesta estructurada: 1) documentación técnica de instalación (para tener el proyecto corriendo localmente), 2) el diagrama de arquitectura general (para entender cómo se conectan las piezas), 3) el modelo entidad-relación (para entender el dominio del negocio), y 4) el código de un módulo completo de ejemplo (ej. "Especie") para entender el patrón repetido en los 51 módulos antes de tocar cualquiera de los otros.</p></div></div>
         </div>
       </div>
     </div>
@@ -238,11 +238,11 @@
       <div class="acordeon">
         <div class="acordeon__item" data-dificultad="facil">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Cuántos módulos y tablas tiene el sistema aproximadamente?</span><span class="acordeon__icono">+</span></button>
-          <div class="acordeon__respuesta"><div><p>~47 módulos funcionales en el backend (uno por entidad principal) y 48 tablas en la base de datos Oracle, organizadas en 6 dominios: personal, catálogos clínicos, atención clínica, inventario/ventas, comunicación y RRHH.</p></div></div>
+          <div class="acordeon__respuesta"><div><p>51 módulos funcionales en el backend (uno por entidad principal, más módulos transversales como <code>auth</code> y <code>push</code>) y 50 tablas en la base de datos Oracle, organizadas en 6 dominios: personal, catálogos clínicos, atención clínica, inventario/ventas, comunicación y RRHH.</p></div></div>
         </div>
         <div class="acordeon__item" data-dificultad="intermedia">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cuál fue la parte más difícil de construir en equipo?</span><span class="acordeon__icono">+</span></button>
-          <div class="acordeon__respuesta"><div><p>Respuesta sugerida (ajústala con tu equipo): coordinar el modelo de permisos "deny by default" a través de ~47 módulos sin dejar ningún endpoint sin proteger, y sincronizar manualmente la lista de orígenes de CORS entre la configuración HTTP normal y el handshake de WebSocket.</p></div></div>
+          <div class="acordeon__respuesta"><div><p>Respuesta sugerida (ajústala con tu equipo): coordinar el modelo de permisos "deny by default" a través de 51 módulos sin dejar ningún endpoint sin proteger, y sincronizar manualmente la lista de orígenes de CORS entre la configuración HTTP normal y el handshake de WebSocket.</p></div></div>
         </div>
         <div class="acordeon__item" data-dificultad="intermedia">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cómo se dividió el trabajo entre los 6 integrantes del equipo?</span><span class="acordeon__icono">+</span></button>
@@ -262,7 +262,7 @@
         </div>
         <div class="acordeon__item" data-dificultad="dificil">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Por qué una arquitectura modular por feature en vez de la clásica por capas?</span><span class="acordeon__icono">+</span></button>
-          <div class="acordeon__respuesta"><div><p>En una arquitectura por capas clásica (todos los controllers juntos, todos los services juntos), con 47 entidades esas carpetas se vuelven inmanejables — encontrar todo lo relacionado a "Citas" implica saltar entre 5 carpetas distintas. La organización modular por feature agrupa todo lo de una entidad (controller, service, repository, entity, dto, exceptions) en una sola carpeta, lo que facilita trabajar en equipo sin pisarse (cada integrante puede "dueño" de sus módulos) y entender un dominio completo sin saltar por todo el proyecto.</p></div></div>
+          <div class="acordeon__respuesta"><div><p>En una arquitectura por capas clásica (todos los controllers juntos, todos los services juntos), con 51 entidades esas carpetas se vuelven inmanejables — encontrar todo lo relacionado a "Citas" implica saltar entre 5 carpetas distintas. La organización modular por feature agrupa todo lo de una entidad (controller, service, repository, entity, dto, exceptions) en una sola carpeta, lo que facilita trabajar en equipo sin pisarse (cada integrante puede "dueño" de sus módulos) y entender un dominio completo sin saltar por todo el proyecto.</p></div></div>
         </div>
       </div>
     </div>
