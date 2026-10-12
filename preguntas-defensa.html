@@ -68,7 +68,7 @@
         </div>
         <div class="acordeon__item" data-dificultad="intermedia">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Qué diagramas incluyeron y qué muestra cada uno?</span><span class="acordeon__icono">+</span></button>
-          <div class="acordeon__respuesta"><div><p>Típicamente: <strong>diagrama de casos de uso</strong> (qué puede hacer cada rol — es la base del criterio 8, protección de endpoints), <strong>diagrama entidad-relación</strong> (las 50 tablas y sus relaciones, ver <a href="base-datos.html">Base de datos</a>), y opcionalmente un <strong>diagrama de arquitectura</strong> (cómo se comunican frontend, backend, base de datos y app móvil). Ajusta esta respuesta a los diagramas reales que tu equipo entregó.</p></div></div>
+          <div class="acordeon__respuesta"><div><p>Típicamente: <strong>diagrama de casos de uso</strong> (qué puede hacer cada rol — es la base del criterio 8, protección de endpoints), <strong>diagrama entidad-relación</strong> (las 51 tablas y sus relaciones, ver <a href="base-datos.html">Base de datos</a>), y opcionalmente un <strong>diagrama de arquitectura</strong> (cómo se comunican frontend, backend, base de datos y app móvil). Ajusta esta respuesta a los diagramas reales que tu equipo entregó.</p></div></div>
         </div>
         <div class="acordeon__item" data-dificultad="dificil">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si un desarrollador nuevo se uniera al equipo mañana, ¿qué necesitaría leer primero y en qué orden?</span><span class="acordeon__icono">+</span></button>
@@ -130,6 +130,10 @@
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Qué pasaría con la integridad de datos si eliminan una mascota que ya tiene expedientes clínicos?</span><span class="acordeon__icono">+</span></button>
           <div class="acordeon__respuesta"><div><p>Las llaves foráneas (<code>FK_*</code>) de Oracle lo impiden por defecto: no se puede eliminar un registro padre (Mascota) mientras existan registros hijos (Expediente, Citas, Hospitalización) que dependan de él — la base de datos lanza un error de integridad referencial, que el backend traduce a un <strong>409 Conflict</strong> en vez de dejar expedientes "huérfanos" apuntando a una mascota que ya no existe. Por eso PetCore usa baja lógica (<code>EMP_ESTADO = 'Inactivo'</code>) en vez de borrado físico para registros con historial clínico.</p></div></div>
         </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>Al confirmar una venta en farmacia, ¿quién descuenta el stock: el frontend, el backend o la base de datos?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>La base de datos, mediante un <strong>trigger</strong> (<code>TRG_DETALLE_VENTA_STOCK</code>): cada vez que se inserta una línea en <code>TBL_DETALLE_VENTA</code> de una venta ya "Pagada", el trigger descuenta automáticamente <code>TBL_PRODUCTO.PROD_STOCK_DISPONIBLE</code> y registra el movimiento en el kardex (<code>TBL_MOVIMIENTO_INVENTARIO</code>). Esto garantiza que el stock se mantenga correcto sin importar desde dónde se inserte la venta.</p></div></div>
+        </div>
       </div>
     </div>
 
@@ -156,6 +160,18 @@
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Cómo aseguran que una prescripción médica no tenga una dosis fuera de rango, sin hardcodear reglas para cada fármaco?</span><span class="acordeon__icono">+</span></button>
           <div class="acordeon__respuesta"><div><p>A través de la tabla <code>TBL_POSOLOGIA_FARMACO</code>: cada producto farmacéutico tiene asociada su posología de referencia (dosis mínima/máxima recomendada), y el formulario de prescripción puede validar contra ese catálogo en vez de tener un valor fijo en el código — así agregar un medicamento nuevo con su propio rango de dosis no requiere tocar la lógica de validación, solo un nuevo registro en el catálogo.</p></div></div>
         </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Por qué una mascota puede no tener raza o pelaje registrado?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Porque la <strong>especie</strong> ahora es el único dato obligatorio real (<code>MAS_ESP_ID</code>); la raza y el pelaje pasaron a ser opcionales. Antes, registrar una mascota mestiza o de una especie sin catálogo de razas obligaba a elegir una raza "inventada" solo para poder guardar el registro. Ahora se puede dejar en "Sin raza" / "Sin pelaje" sin romper la integridad del dato.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si la especie y la raza son independientes, ¿qué evita que me asignen una raza canina a una mascota felina?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Una llave foránea <strong>compuesta</strong>: <code>TBL_MASCOTAS (MAS_RAZ_ID, MAS_ESP_ID)</code> referencia a <code>TBL_RAZA (RAZ_ID, RAZ_ESP_ID)</code> — Oracle exige que, si se indica una raza, el par (raza, especie) exista exactamente así en el catálogo de razas. Es integridad referencial resuelta a nivel de base de datos, no con un <code>if</code> en el backend.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Qué pasa si intentan hospitalizar una mascota cuando ya no hay camas disponibles?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Un trigger de base de datos (<code>TRG_HOSPITALIZACION_CHECK_CAPACITY</code>) cuenta cuántos pacientes siguen internados (fecha de egreso nula) y lo compara contra <code>SIS_CAPACIDAD_HOSPITALIZACION</code> de <code>TBL_CFG_SISTEMA</code>. Si ya se alcanzó el límite, la inserción se rechaza con un error explícito — la regla de negocio "no hospitalizar más de la capacidad configurada" se cumple sin importar si el intento viene de la API o de una inserción directa por SQL.</p></div></div>
+        </div>
       </div>
     </div>
 
@@ -181,6 +197,18 @@
         <div class="acordeon__item" data-dificultad="dificil">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si el servidor de correo (SMTP) se cae, ¿qué le pasa al flujo de recuperación de contraseña?</span><span class="acordeon__icono">+</span></button>
           <div class="acordeon__respuesta"><div><p>Respuesta honesta: el usuario no recibiría el código de recuperación y el flujo quedaría bloqueado en ese paso — es una dependencia externa del sistema. Una mejora posible sería agregar un mecanismo de reintento con cola, o un canal alterno (ej. recuperación asistida por un Administrador desde el panel de personal) para no depender 100% de que el correo llegue.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cómo crea su cuenta un propietario nuevo en la app móvil?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Con su DUI, en 3 pasos: 1) solicita un código escribiendo su DUI, 2) el código llega al correo que la clínica ya tiene registrado (no a uno que escriba en ese momento), 3) confirma el código y define su propio usuario y contraseña. Solo funciona para propietarios que ya son clientes registrados por el personal — no es un registro abierto a cualquiera.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Por qué el autoregistro por DUI responde siempre el mismo mensaje, sin decir si ese DUI existe?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Para evitar un <strong>ataque de enumeración de usuarios</strong>: si el sistema dijera explícitamente "ese DUI no está registrado" vs. "código enviado", cualquiera podría probar miles de DUI y averiguar quiénes son clientes reales de la clínica sin siquiera intentar entrar a una cuenta. El mensaje genérico no revela esa información — mismo patrón que ya usa la recuperación de contraseña.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="intermedia">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>Cuando el propietario inicia sesión con Google, ¿PetCore llega a ver su contraseña de Google?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Nunca. Ese es justamente el punto de usar el protocolo <strong>OAuth 2.0</strong>: el navegador del usuario habla directamente con los servidores de Google, nunca con PetCore. Google le entrega a PetCore solo un <em>ID Token</em> firmado que certifica la identidad — <code>GoogleTokenVerifier.java</code> verifica esa firma con la clave pública de Google, pero la contraseña real de la cuenta de Google jamás pasa por el backend de PetCore.</p></div></div>
         </div>
       </div>
     </div>
@@ -230,6 +258,14 @@
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>Si Heroku reinicia el dyno y pierde todo el estado en memoria, ¿qué garantiza que los usuarios no pierdan su sesión?</span><span class="acordeon__icono">+</span></button>
           <div class="acordeon__respuesta"><div><p>Precisamente el diseño <strong>stateless</strong> de la autenticación: la sesión no vive en memoria del servidor (no hay una tabla ni un mapa de sesiones activas), sino en el JWT dentro de la cookie del navegador del usuario. Si el dyno se reinicia, el nuevo proceso puede validar esa cookie igual que el anterior, porque la firma del JWT depende solo del secreto compartido (<code>SECRET_KEY_JWT</code>), no de ningún estado que se haya perdido.</p></div></div>
         </div>
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué es un CDN y lo usa Vercel?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Un <strong>CDN</strong> (Content Delivery Network) es una red de servidores distribuidos geográficamente que sirven los mismos archivos estáticos (HTML, CSS, JS, imágenes) desde el servidor más cercano al usuario, en vez de uno solo centralizado. Vercel sirve el frontend de PetCore a través de su CDN, lo que hace que cargue rápido sin importar desde qué país se acceda — a diferencia de la API en Heroku, que sí corre en un único servidor (dyno).</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="dificil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-dificil">Difícil</span><span>¿Qué pasaría con el sistema si Cloudinary (el servicio de imágenes) se cayera?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Respuesta honesta: subir fotos nuevas de mascotas o de perfil fallaría, pero el resto del sistema (citas, expedientes, ventas, inventario) seguiría funcionando con normalidad, porque Cloudinary solo guarda <em>imágenes</em>, no datos operativos — la base de datos solo almacena la URL. Las fotos ya subidas seguirían viéndose si Cloudinary solo tiene una caída parcial de escritura pero no de lectura. Es una dependencia externa aislada, no un punto único de falla para todo el sistema.</p></div></div>
+        </div>
       </div>
     </div>
 
@@ -238,7 +274,15 @@
       <div class="acordeon">
         <div class="acordeon__item" data-dificultad="facil">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Cuántos módulos y tablas tiene el sistema aproximadamente?</span><span class="acordeon__icono">+</span></button>
-          <div class="acordeon__respuesta"><div><p>51 módulos funcionales en el backend (uno por entidad principal, más módulos transversales como <code>auth</code> y <code>push</code>) y 50 tablas en la base de datos Oracle, organizadas en 6 dominios: personal, catálogos clínicos, atención clínica, inventario/ventas, comunicación y RRHH.</p></div></div>
+          <div class="acordeon__respuesta"><div><p>51 módulos funcionales en el backend (uno por entidad principal, más módulos transversales como <code>auth</code> y <code>push</code>) y 51 tablas en la base de datos Oracle, organizadas en 6 dominios: personal, catálogos clínicos, atención clínica, inventario/ventas, comunicación y RRHH.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Por qué separan "controller" y "service" en vez de poner toda la lógica en un solo archivo?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Es el patrón <strong>Service Layer</strong>: el <em>controller</em> solo se encarga de recibir el HTTP request y devolver la respuesta; el <em>service</em> contiene la lógica de negocio real (validaciones, cálculos, orquestar varios repositorios). Separarlos hace el código más fácil de probar (se puede probar el service sin necesidad de levantar un servidor HTTP) y más fácil de reutilizar esa lógica desde otro lugar si hiciera falta.</p></div></div>
+        </div>
+        <div class="acordeon__item" data-dificultad="facil">
+          <button class="acordeon__pregunta"><span class="badge-dificultad badge-facil">Fácil</span><span>¿Qué es Lombok y por qué lo usan en casi todas las clases?</span><span class="acordeon__icono">+</span></button>
+          <div class="acordeon__respuesta"><div><p>Lombok es una librería que genera código repetitivo automáticamente a partir de anotaciones: <code>@Getter</code>/<code>@Setter</code> generan los getters y setters, <code>@RequiredArgsConstructor</code> genera el constructor para inyección de dependencias. Sin Lombok, cada una de las 51 entidades y DTO tendría decenas de líneas de getters/setters escritas a mano — Lombok las genera en tiempo de compilación sin que aparezcan en el código fuente.</p></div></div>
         </div>
         <div class="acordeon__item" data-dificultad="intermedia">
           <button class="acordeon__pregunta"><span class="badge-dificultad badge-intermedia">Intermedia</span><span>¿Cuál fue la parte más difícil de construir en equipo?</span><span class="acordeon__icono">+</span></button>

@@ -248,6 +248,9 @@ if (!config.rolesPermitidos.includes(sesion.rol)) {
         </tbody>
       </table>
     </div>
+
+    <h3 style="margin-top:22px;">Novedad: crear cuenta de propietario desde la app (por DUI)</h3>
+    <p>Antes, solo el personal podía crear la cuenta de un propietario. Ahora la app tiene una pantalla de "Crear cuenta" que llama a los nuevos endpoints de <code>RegistroCuentaController</code> (ver <a href="arquitectura-backend.html#jwt">Backend → autoregistro por DUI</a>): el propietario escribe su DUI, recibe un código en el correo que la clínica ya tiene en <code>TBL_PROPIETARIOS</code>, lo confirma, y define su propio usuario y contraseña — sin que un recepcionista tenga que crear la cuenta manualmente.</p>
   </div>
 </section>
 

@@ -122,8 +122,12 @@ pre code{ background:none; border:none; color:inherit; padding:0; }
   background:rgba(255,255,255,.86);
   backdrop-filter:blur(10px);
   border-bottom:1px solid var(--borde);
+  box-shadow:0 1px 0 rgba(0,0,0,.05), 0 4px 16px rgba(15,52,96,.06);
 }
-:root[data-theme="dark"] .nav{ background:rgba(12,22,38,.86); }
+:root[data-theme="dark"] .nav{
+  background:rgba(12,22,38,.92);
+  box-shadow:0 1px 0 rgba(0,0,0,.4), 0 4px 18px rgba(0,0,0,.35);
+}
 .nav__inner{
   max-width:1180px; margin:0 auto; width:100%;
   padding:0 20px;
@@ -188,11 +192,17 @@ pre code{ background:none; border:none; color:inherit; padding:0; }
 
 /* ---------- Hero generico de pagina interior ---------- */
 .hero-pagina{
-  padding:38px 0 28px;
+  padding:26px 0 24px;
   border-bottom:1px solid var(--borde);
   background:
     radial-gradient(900px 300px at 85% -10%, rgba(47,124,209,.14), transparent),
     var(--surface);
+}
+:root[data-theme="dark"] .hero-pagina{
+  background:
+    radial-gradient(900px 300px at 85% -10%, rgba(47,124,209,.22), transparent),
+    var(--surface);
+  border-bottom-color:#2a3b5c;
 }
 .hero-pagina__kicker{
   display:inline-flex; align-items:center; gap:8px;

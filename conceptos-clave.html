@@ -234,6 +234,80 @@
         </div></div>
       </div>
 
+      <div class="acordeon__item" data-termino="enumeracion usuarios respuesta generica dui registro cuenta">
+        <button class="acordeon__pregunta"><span>¿Por qué "solicitar código" siempre responde el mismo mensaje, exista o no la cuenta?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Se llama <strong>ataque de enumeración de usuarios</strong>: si un sistema responde distinto según si un correo/DUI existe o no ("ese DUI no está registrado" vs. "código enviado"), un atacante puede usar esa diferencia para averiguar, probando miles de valores, quiénes son clientes reales de la clínica — sin siquiera intentar entrar a una cuenta.</p>
+          <p>PetCore evita esto en dos flujos que comparten el mismo patrón: la <strong>recuperación de contraseña</strong> y el <strong>autoregistro de propietarios por DUI</strong> (<code>POST /api/auth/registro/propietario/solicitar</code>). En ambos, el endpoint responde <em>siempre</em> el mismo mensaje genérico ("si corresponde a un cliente, te enviamos un código") sin importar si el DUI/correo existe en la base de datos — la diferencia solo la nota quien de verdad recibió el correo.</p>
+          <p class="nota" style="margin-top:10px;">Frase para la defensa: <em>"No es que no validemos el DUI — sí lo validamos y sí mandamos el código solo si corresponde a un cliente real. Lo que no hacemos es decírselo a quien pregunta, para no convertir el formulario en una forma de averiguar quién es cliente de la clínica."</em></p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="trigger base de datos regla de negocio oracle">
+        <button class="acordeon__pregunta"><span>¿Qué es un trigger y dónde los usa PetCore?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Un <strong>trigger</strong> es código que la propia base de datos ejecuta automáticamente cuando ocurre un evento (INSERT, UPDATE, DELETE) sobre una tabla — sin que ninguna aplicación tenga que pedirlo explícitamente. Es una forma de que ciertas reglas de negocio se cumplan <em>siempre</em>, incluso si alguien inserta datos directamente por SQL sin pasar por la API.</p>
+          <p>PetCore tiene varios triggers reales en el script de base de datos: <code>TRG_HOSPITALIZACION_CHECK_CAPACITY</code> rechaza un nuevo ingreso si ya se alcanzó el límite de capacidad configurado en <code>TBL_CFG_SISTEMA</code>; <code>TRG_PROD_INSERTAR_STOCK_MIN</code> asigna automáticamente el stock mínimo/alerta de un producto nuevo si no se especifica; y <code>TRG_DETALLE_VENTA_STOCK</code> descuenta el inventario y registra el movimiento en el <em>kardex</em> (<code>TBL_MOVIMIENTO_INVENTARIO</code>) cada vez que se confirma una venta, automáticamente.</p>
+          <p class="nota" style="margin-top:10px;">Buena respuesta si preguntan "¿y si alguien modifica el stock directo en la base de datos, se descuadra todo?": <em>"No, porque ese trigger corre sin importar si el cambio vino de la API o de una consulta SQL directa — la regla vive en la base de datos, no solo en el backend."</em></p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="kardex package oracle procedimiento almacenado">
+        <button class="acordeon__pregunta"><span>¿Qué es el "kardex" y cómo evita registrar un movimiento de inventario dos veces?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>El <strong>kardex</strong> es el historial cronológico de todos los movimientos de un producto en inventario (entradas por compra, salidas por venta, ajustes manuales) — cada fila de <code>TBL_MOVIMIENTO_INVENTARIO</code> es un movimiento. El reto técnico: si una venta descuenta el stock <em>y además</em> dispara un trigger que también registra el movimiento, se podría duplicar el registro.</p>
+          <p>PetCore lo resuelve con un <strong>package de Oracle</strong> (<code>PKG_KARDEX_CTX</code>) que mantiene una bandera en memoria de sesión (<code>g_omitir</code>): mientras un trigger de documento (venta/compra) está actualizando el stock, activa la bandera para que un segundo trigger más genérico no vuelva a registrar el mismo movimiento por duplicado. Es un patrón de control de concurrencia a nivel de base de datos, no solo de aplicación.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="inyeccion de dependencias dependency injection requiredargsconstructor lombok">
+        <button class="acordeon__pregunta"><span>¿Qué es la inyección de dependencias y qué hace @RequiredArgsConstructor?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>La <strong>inyección de dependencias</strong> es un patrón donde una clase no crea sus propias dependencias (ej. un controller no hace <code>new CitasService()</code>), sino que Spring se las "inyecta" automáticamente al crear el objeto. Esto facilita las pruebas (se puede inyectar una versión falsa en un test) y desacopla las clases entre sí.</p>
+          <p>PetCore usa <strong>inyección por constructor</strong> en casi todas sus clases, generada automáticamente con la anotación de Lombok <code>@RequiredArgsConstructor</code>: crea un constructor con un parámetro por cada campo <code>final</code> de la clase, y Spring llena esos parámetros solo. Es la forma recomendada actualmente (en vez de <code>@Autowired</code> directo en el campo) porque hace explícitas las dependencias y permite que los campos sean inmutables (<code>final</code>).</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="lazy eager fetch type jpa carga perezosa">
+        <button class="acordeon__pregunta"><span>¿Qué significa FetchType.LAZY y por qué lo usan en todas las relaciones?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Cuando una entidad JPA tiene una relación con otra (ej. una Mascota tiene un Propietario), Hibernate puede cargar esa relación de dos formas: <strong>EAGER</strong> (la trae siempre, aunque no se use) o <strong>LAZY</strong> (solo la trae si el código realmente accede a ella). PetCore usa <code>fetch = FetchType.LAZY</code> en prácticamente todas sus relaciones <code>@ManyToOne</code>/<code>@OneToMany</code>.</p>
+          <p>La razón: con 51 entidades fuertemente relacionadas, cargar todo EAGER por defecto significaría que pedir una sola mascota podría arrastrar en cascada su propietario, sus citas, sus expedientes, los servicios de esas citas... una consulta pequeña se volvería gigante sin que el desarrollador lo note. LAZY obliga a ser explícito sobre qué datos relacionados se necesitan en cada caso.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="hikaricp pool de conexiones base de datos">
+        <button class="acordeon__pregunta"><span>¿Qué es un pool de conexiones y por qué lo limitan a 8?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Abrir una conexión nueva a la base de datos en cada petición es lento (negociar la conexión, autenticar, etc.). Un <strong>pool de conexiones</strong> mantiene un grupo de conexiones ya abiertas y listas, que la aplicación "toma prestadas" y devuelve en vez de crear una desde cero cada vez. PetCore usa <strong>HikariCP</strong> (el pool por defecto de Spring Boot), configurado con un máximo de <strong>8 conexiones</strong>.</p>
+          <p>Ese número bajo no es arbitrario: Oracle Cloud en el plan gratuito/Autonomous limita cuántas sesiones concurrentes acepta, y Heroku en el plan económico también limita memoria — 8 conexiones es suficiente para el tráfico esperado sin agotar esos límites compartidos.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="cloudinary imagenes almacenamiento nube">
+        <button class="acordeon__pregunta"><span>¿Por qué no guardan las fotos directamente en la base de datos o el servidor?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Guardar imágenes como datos binarios (<code>BLOB</code>) en Oracle infla rápidamente el tamaño de la base de datos y hace las consultas más lentas; guardarlas en el disco del servidor de Heroku tampoco funciona bien porque el sistema de archivos de un dyno es <strong>efímero</strong> — se borra cada vez que el dyno se reinicia o duerme.</p>
+          <p>PetCore usa <strong>Cloudinary</strong>, un servicio externo especializado en almacenar y servir imágenes: la API sube la foto, Cloudinary la guarda en su propia infraestructura (con CDN incluido) y devuelve una URL pública. La base de datos solo guarda esa URL y el ID de Cloudinary (<code>EMP_FOTO_PERFIL_URL</code>, <code>EMP_FOTO_PERFIL_CLOUDINARY_ID</code>), no la imagen en sí.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="sweetalert2 alert confirm nativo navegador">
+        <button class="acordeon__pregunta"><span>¿Por qué usan SweetAlert2 en vez de alert()/confirm() del navegador?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p>Los diálogos nativos del navegador (<code>alert()</code>, <code>confirm()</code>) son funciones <strong>bloqueantes</strong> (congelan toda la página hasta que el usuario responde), no se pueden personalizar visualmente, y se ven inconsistentes entre navegadores — además, cualquier script puede dispararlos en bucle para molestar al usuario, por lo que los navegadores modernos los tratan con desconfianza.</p>
+          <p>PetCore usa <strong>SweetAlert2</strong> en todo el sistema: alertas de éxito/error, confirmaciones antes de eliminar un registro, y los "Toast" pequeños de notificación — todos con el estilo visual de PetCore, no el diálogo genérico gris del sistema operativo.</p>
+        </div></div>
+      </div>
+
+      <div class="acordeon__item" data-termino="oauth2 google login protocolo autorizacion">
+        <button class="acordeon__pregunta"><span>¿Qué es OAuth 2.0 y cómo protege el login con Google?</span><span class="acordeon__icono">+</span></button>
+        <div class="acordeon__respuesta"><div>
+          <p><strong>OAuth 2.0</strong> es el protocolo estándar que permite que una app (PetCore) confirme la identidad de un usuario a través de un tercero de confianza (Google) <strong>sin que PetCore nunca vea ni guarde la contraseña de Google</strong> del usuario. El navegador habla directamente con Google, y Google le entrega a PetCore solo un token firmado que certifica quién es el usuario.</p>
+          <p>Por eso <code>GoogleTokenVerifier.java</code> no hace login contra Google — solo <strong>verifica la firma</strong> del ID Token que ya llegó, usando las claves públicas de Google, para confirmar que no fue falsificado. Si alguien intentara enviar un token inventado, la verificación de firma fallaría inmediatamente.</p>
+        </div></div>
+      </div>
+
     </div>
 
     <p id="sin-resultados" class="nota" style="display:none;margin-top:16px;">No se encontró ningún concepto con ese término. Prueba con otra palabra.</p>

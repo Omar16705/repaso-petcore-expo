@@ -31,7 +31,7 @@
   <div class="contenedor">
     <span class="hero-pagina__kicker">Base de datos · Oracle Cloud</span>
     <h1>Modelo de datos de PetCore</h1>
-    <p><strong>50 tablas</strong> en Oracle, gestionadas con <strong>SQL Developer</strong>, siguiendo el estándar <code>SCREAMING_SNAKE_CASE</code>: <code>TBL_&lt;ENTIDAD&gt;</code>, prefijo de columna por tabla, y constraints nombradas <code>PK_ / FK_ / UQ_ / CK_ / IX_</code>. El script se ejecuta de arriba hacia abajo porque ya respeta el orden de dependencias de llaves foráneas.</p>
+    <p><strong>51 tablas</strong> en Oracle, gestionadas con <strong>SQL Developer</strong>, siguiendo el estándar <code>SCREAMING_SNAKE_CASE</code>: <code>TBL_&lt;ENTIDAD&gt;</code>, prefijo de columna por tabla, y constraints nombradas <code>PK_ / FK_ / UQ_ / CK_ / IX_</code>. El script se ejecuta de arriba hacia abajo porque ya respeta el orden de dependencias de llaves foráneas.</p>
   </div>
 </header>
 
@@ -79,7 +79,7 @@
 
 <section class="seccion">
   <div class="contenedor">
-    <p class="etiqueta-seccion">Las 50 tablas</p>
+    <p class="etiqueta-seccion">Las 51 tablas</p>
     <h2 class="titulo-seccion">Organizadas por dominio funcional</h2>
     <p class="sub-seccion">Así se explican mejor en la defensa que leyendo una lista plana: agrúpalas por lo que hacen.</p>
 
@@ -93,7 +93,7 @@
     <div class="grupo-bd">
       <h3>🐶 Catálogos clínicos y mascotas</h3>
       <div class="chips-bd">
-        <span class="chip-bd">TBL_ESPECIE</span><span class="chip-bd">TBL_RAZA</span><span class="chip-bd">TBL_PELAJE</span><span class="chip-bd">TBL_PROPIETARIOS</span><span class="chip-bd">TBL_MASCOTAS</span><span class="chip-bd">TBL_ALERGIAS</span><span class="chip-bd">TBL_ALERGIA_MASCOTA</span><span class="chip-bd">TBL_DIAGNOSTICOS</span><span class="chip-bd">TBL_DIAGNOSTICO_RAZA</span><span class="chip-bd">TBL_MASCOTA_ENFERMEDAD</span>
+        <span class="chip-bd">TBL_ESPECIE</span><span class="chip-bd">TBL_RAZA</span><span class="chip-bd">TBL_PELAJE</span><span class="chip-bd">TBL_PELAJE_ESPECIE</span><span class="chip-bd">TBL_PROPIETARIOS</span><span class="chip-bd">TBL_MASCOTAS</span><span class="chip-bd">TBL_ALERGIAS</span><span class="chip-bd">TBL_ALERGIA_MASCOTA</span><span class="chip-bd">TBL_DIAGNOSTICOS</span><span class="chip-bd">TBL_DIAGNOSTICO_RAZA</span><span class="chip-bd">TBL_MASCOTA_ENFERMEDAD</span>
       </div>
     </div>
 
@@ -124,6 +124,35 @@
         <span class="chip-bd">TBL_ASISTENCIA_EMPLEADOS</span><span class="chip-bd">TBL_DIAS_FERIADOS</span>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="seccion seccion--alt" id="cambio-esquema">
+  <div class="contenedor">
+    <p class="etiqueta-seccion">Cambio reciente de esquema</p>
+    <h2 class="titulo-seccion">Mascotas: la especie ya no depende de la raza</h2>
+    <p class="sub-seccion">Hasta hace poco, una mascota solo tenía <code>MAS_RAZ_ID</code>, y la especie se deducía indirectamente a través de la raza. Eso obligaba a registrar una raza aunque no se conociera (ej. mascotas mestizas o especies exóticas sin catálogo de razas). El esquema cambió para reflejar la realidad clínica:</p>
+
+    <div class="rejilla rejilla--2">
+      <div class="tarjeta">
+        <h3><code>TBL_MASCOTAS</code> ahora tiene <code>MAS_ESP_ID</code> directo</h3>
+        <ul class="lista-compacta" style="margin:0;padding-left:18px;">
+          <li><code>MAS_ESP_ID</code> → <strong>obligatoria</strong>, FK directa a <code>TBL_ESPECIE</code></li>
+          <li><code>MAS_RAZ_ID</code> → ahora <strong>opcional</strong> ("Sin raza")</li>
+          <li><code>MAS_PEL_ID</code> → ahora <strong>opcional</strong> ("Sin pelaje / No aplica")</li>
+          <li>FK compuesta <code>(MAS_RAZ_ID, MAS_ESP_ID) → TBL_RAZA(RAZ_ID, RAZ_ESP_ID)</code>: si sí se indica raza, tiene que pertenecer a la misma especie de la mascota — Oracle no deja mezclar, por ejemplo, una mascota Felino con una raza canina.</li>
+        </ul>
+      </div>
+      <div class="tarjeta">
+        <h3>Dos piezas nuevas que lo sostienen</h3>
+        <ul class="lista-compacta" style="margin:0;padding-left:18px;">
+          <li><code>TBL_RAZA.RAZ_SIN_PELAJE</code> (0/1): marca razas sin pelo (Sphynx, Xoloitzcuintle, Donskoy...) — el formulario bloquea el campo pelaje para esas razas en vez de dejarlo vacío por descuido.</li>
+          <li><code>TBL_PELAJE_ESPECIE</code> (tabla nueva, intersección): define qué pelajes aplican a cada especie. Una especie sin filas aquí = "no aplica pelaje" (ej. reptiles). Nuevo endpoint: <code>GET /api/pelajes/por_especie/{idEspecie}</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nota nota--exito" style="margin-top:14px;">Buena respuesta si preguntan por qué lo cambiaron: <em>"Antes la especie era un dato derivado de la raza, lo que obligaba a inventar una raza para mascotas mestizas o especies sin catálogo. Ahora la especie es el dato obligatorio real y la raza es información adicional opcional — más fiel a cómo funciona una clínica veterinaria real."</em></div>
   </div>
 </section>
 

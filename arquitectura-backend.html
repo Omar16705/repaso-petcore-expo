@@ -63,7 +63,7 @@
       <table>
         <thead><tr><th>Dependencia</th><th>Para qué se usa en PetCore</th></tr></thead>
         <tbody>
-          <tr><td><code>spring-boot-starter-data-jpa</code></td><td>JPA/Hibernate: mapea las 50 tablas Oracle a entidades Java y genera los repositorios.</td></tr>
+          <tr><td><code>spring-boot-starter-data-jpa</code></td><td>JPA/Hibernate: mapea las 51 tablas Oracle a entidades Java y genera los repositorios.</td></tr>
           <tr><td><code>spring-boot-starter-web</code> / <code>-webmvc</code></td><td>Spring MVC: controllers REST, serialización JSON automática.</td></tr>
           <tr><td><code>spring-boot-starter-security</code></td><td>Autenticación/autorización: filtra cada request, aplica roles.</td></tr>
           <tr><td><code>spring-security-crypto</code></td><td>Utilidades criptográficas usadas junto al hashing Argon2 de contraseñas.</td></tr>
@@ -266,6 +266,20 @@
 
     <h3 style="margin-top:24px;">Dos audiencias, dos cookies</h3>
     <p>El sistema distingue entre <strong>empleados</strong> (Administrador/Veterinario/Recepcionista/Farmacéutico, usan el portal web) y <strong>propietarios</strong> (dueños de mascotas, usan la app móvil). Cada tipo tiene su propio login, su propio endpoint <code>/api/auth/me/...</code> y su propia cookie, firmadas con la misma utilidad <code>JWTUtils</code> pero mantenidas separadas para no mezclar permisos.</p>
+
+    <h3 style="margin-top:24px;">Novedad: autoregistro del Propietario por DUI</h3>
+    <p>Hasta ahora, la cuenta de un propietario la tenía que crear el personal. <span class="archivo-ref">auth/controller/RegistroCuentaController.java</span> agrega un flujo de autoservicio para un propietario que <strong>ya existe como cliente de la clínica</strong> (registrado por Recepcionista) pero nunca ha creado su acceso a la app:</p>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Paso</th><th>Endpoint</th><th>Qué hace</th></tr></thead>
+        <tbody>
+          <tr><td>1. Solicitar</td><td><code>POST /api/auth/registro/propietario/solicitar</code></td><td>Recibe el DUI, busca al propietario y le envía un código al <strong>correo que la clínica ya tiene registrado</strong> (no uno que el usuario escriba en ese momento).</td></tr>
+          <tr><td>2. Verificar</td><td><code>POST /api/auth/registro/propietario/verificar</code></td><td>Valida DUI + código antes de dejar continuar.</td></tr>
+          <tr><td>3. Crear</td><td><code>POST /api/auth/registro/propietario/crear</code></td><td>Revalida el código, lo consume, y en una sola operación define usuario y contraseña de la cuenta.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nota nota--exito" style="margin-top:14px;">Detalle de seguridad para destacar: el paso "solicitar" <strong>siempre responde el mismo mensaje genérico</strong>, exista o no ese DUI en la clínica — para no revelar, por ensayo y error, quiénes son clientes registrados (el mismo patrón de "respuesta uniforme" que ya usa la recuperación de contraseña).</div>
   </div>
 </section>
 

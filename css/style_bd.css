@@ -20,3 +20,9 @@
   padding:8px 14px; border-radius:999px; white-space:nowrap;
 }
 .flujo-flecha{ color:var(--texto-tenue); font-weight:700; }
+
+.lista-compacta{ display:flex; flex-direction:column; gap:7px; font-size:.92rem; color:var(--texto-suave); }
+.lista-compacta li::marker{ color:var(--azul-500); }
+.lista-compacta code{ font-size:.82em; }
+
+#cambio-esquema{ scroll-margin-top: calc(var(--nav-h) + 12px); }
